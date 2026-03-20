@@ -44,15 +44,18 @@ class BollingerStrategy(BaseStrategy):
                 "name": "Upper Band",
                 "color": "#ef4444",
                 "data": series_to_line_data(bb.upper),
+                "overlay": True,
             },
             {
                 "name": "Middle Band",
                 "color": "#9ca3af",
                 "data": series_to_line_data(bb.middle),
+                "overlay": True,
             },
             {
                 "name": "Lower Band",
                 "color": "#22c55e",
                 "data": series_to_line_data(bb.lower),
+                "overlay": True,
             },
         ]

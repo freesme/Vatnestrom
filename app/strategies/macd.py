@@ -49,10 +49,12 @@ class MACDStrategy(BaseStrategy):
                 "name": "MACD",
                 "color": "#3b82f6",
                 "data": series_to_line_data(macd_ind.macd),
+                "overlay": False,
             },
             {
                 "name": "Signal",
                 "color": "#ef4444",
                 "data": series_to_line_data(macd_ind.signal),
+                "overlay": False,
             },
         ]

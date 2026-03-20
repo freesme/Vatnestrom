@@ -57,13 +57,16 @@ def run_backtest(config: BacktestConfig) -> dict:
     # 第四步：获取回测统计指标（收益率、夏普比率、最大回撤等）
     stats = portfolio.stats()
 
-    # 第五步：提取买卖信号对应的价格点位
-    signals = _extract_signals(price, entries, exits)
+    # 第五步：从 portfolio 提取实际执行的买卖信号（而非原始策略信号）
+    signals = _extract_portfolio_signals(portfolio, price)
 
-    # 第六步：将 OHLCV 数据转换为前端 lightweight-charts 所需的格式
+    # 第六步：从 portfolio 提取完整交易记录（配对的买入卖出）
+    trades = _extract_trades(portfolio, price)
+
+    # 第七步：将 OHLCV 数据转换为前端 lightweight-charts 所需的格式
     ohlcv_list = _format_ohlcv(ohlcv_df)
 
-    # 第七步：生成策略对应的技术指标线数据（如均线）
+    # 第八步：生成策略对应的技术指标线数据（如均线）
     indicators = strategy.generate_indicators(price, config.strategy_params)
 
     # 将结果组装为字典
@@ -73,6 +76,7 @@ def run_backtest(config: BacktestConfig) -> dict:
         "params": config.strategy_params,
         "ohlcv": ohlcv_list,
         "signals": signals,
+        "trades": trades,
         "indicators": indicators,
         "stats": {k: _serialize(v) for k, v in stats.items()},
     }
@@ -103,16 +107,11 @@ def _format_ohlcv(df: pd.DataFrame) -> list[dict]:
     return records
 
 
-def _extract_signals(price: pd.Series, entries: pd.Series, exits: pd.Series) -> list[dict]:
-    """提取买卖信号对应的日期和价格点位
+def _extract_portfolio_signals(portfolio, price: pd.Series) -> list[dict]:
+    """从 portfolio 的 orders 中提取实际执行的买卖信号
 
-    将布尔信号序列转换为具体的交易记录列表，每条记录包含：
-    日期、操作类型（buy/sell）、对应的收盘价。
-
-    Args:
-        price: 收盘价序列
-        entries: 买入信号布尔序列
-        exits: 卖出信号布尔序列
+    只返回 portfolio 真正执行的订单，而非策略产生的原始信号。
+    这确保图表标记与实际交易记录完全一致。
 
     Returns:
         按日期排序的信号列表，例如:
@@ -122,29 +121,83 @@ def _extract_signals(price: pd.Series, entries: pd.Series, exits: pd.Series) -> 
         ]
     """
     signals = []
+    orders = portfolio.orders.records_readable
 
-    # 提取所有买入信号的日期和价格
-    buy_dates = entries[entries].index
-    for date in buy_dates:
+    for _, order in orders.iterrows():
+        date = pd.Timestamp(order["Timestamp"])
         signals.append({
             "date": str(date.date()),
-            "action": "buy",
-            "price": round(float(price[date]), 2),
+            "action": "buy" if order["Side"] == "Buy" else "sell",
+            "price": round(float(order["Price"]), 2),
         })
 
-    # 提取所有卖出信号的日期和价格
-    sell_dates = exits[exits].index
-    for date in sell_dates:
-        signals.append({
-            "date": str(date.date()),
-            "action": "sell",
-            "price": round(float(price[date]), 2),
-        })
-
-    # 按日期排序，方便查看交易时间线
     signals.sort(key=lambda x: x["date"])
-
     return signals
+
+
+def _extract_trades(portfolio, price: pd.Series) -> list[dict]:
+    """从 portfolio 中提取配对的交易记录
+
+    返回每笔交易的买入/卖出日期、价格、盈亏等详细信息。
+
+    Returns:
+        交易记录列表，例如:
+        [
+            {
+                "id": 1,
+                "buy_date": "2025-01-10", "buy_price": 150.25,
+                "sell_date": "2025-02-05", "sell_price": 162.30,
+                "pnl": 12.05, "pnl_pct": 8.02, "status": "win"
+            },
+        ]
+    """
+    trades_list = []
+    trades = portfolio.trades.records_readable
+
+    for i, (_, trade) in enumerate(trades.iterrows()):
+        entry_date = str(pd.Timestamp(trade["Entry Timestamp"]).date())
+        entry_price = round(float(trade["Avg Entry Price"]), 2)
+
+        status_val = trade["Status"]
+        is_open = str(status_val) == "Open"
+
+        if is_open:
+            trades_list.append({
+                "id": i + 1,
+                "buy_date": entry_date,
+                "buy_price": entry_price,
+                "sell_date": None,
+                "sell_price": None,
+                "pnl": None,
+                "pnl_pct": None,
+                "status": "open",
+            })
+        else:
+            exit_date = str(pd.Timestamp(trade["Exit Timestamp"]).date())
+            exit_price = round(float(trade["Avg Exit Price"]), 2)
+            pnl = round(float(trade["PnL"]), 2)
+            ret = float(trade["Return"])
+            pnl_pct = round(ret * 100, 2)
+
+            if pnl > 0:
+                status = "win"
+            elif pnl < 0:
+                status = "loss"
+            else:
+                status = "flat"
+
+            trades_list.append({
+                "id": i + 1,
+                "buy_date": entry_date,
+                "buy_price": entry_price,
+                "sell_date": exit_date,
+                "sell_price": exit_price,
+                "pnl": pnl,
+                "pnl_pct": pnl_pct,
+                "status": status,
+            })
+
+    return trades_list
 
 
 def _serialize(v):

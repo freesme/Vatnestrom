@@ -54,6 +54,21 @@ const en: Record<string, string> = {
   "stats.Omega Ratio": "Omega Ratio",
   "stats.Sortino Ratio": "Sortino Ratio",
 
+  // Trades table
+  "trades.title": "Trade Records",
+  "trades.total": "Total",
+  "trades.buy_date": "Buy Date",
+  "trades.buy_price": "Buy Price",
+  "trades.sell_date": "Sell Date",
+  "trades.sell_price": "Sell Price",
+  "trades.pnl": "P&L",
+  "trades.pnl_pct": "P&L %",
+  "trades.status": "Status",
+  "trades.win": "Win",
+  "trades.loss": "Loss",
+  "trades.flat": "Flat",
+  "trades.open": "Open",
+
   // Strategy names
   "strategy.ma_cross.name": "MA Crossover",
   "strategy.ma_cross.desc": "Classic trend-following strategy. Buys on golden cross (fast MA above slow MA), sells on death cross. Best for trending markets.",

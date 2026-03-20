@@ -44,5 +44,6 @@ class RSIStrategy(BaseStrategy):
                 "name": f"RSI{rsi_window}",
                 "color": "#8b5cf6",
                 "data": series_to_line_data(rsi.rsi),
+                "overlay": False,
             },
         ]

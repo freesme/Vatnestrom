@@ -45,10 +45,12 @@ class DonchianStrategy(BaseStrategy):
                 "name": f"Upper({entry_window})",
                 "color": "#ef4444",
                 "data": series_to_line_data(upper),
+                "overlay": True,
             },
             {
                 "name": f"Lower({exit_window})",
                 "color": "#22c55e",
                 "data": series_to_line_data(lower),
+                "overlay": True,
             },
         ]

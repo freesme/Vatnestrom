@@ -26,6 +26,20 @@ export interface Indicator {
   name: string;
   color: string;
   data: IndicatorPoint[];
+  /** 是否叠加在主图上（默认 true）。false 表示独立面板（如 RSI、MACD） */
+  overlay?: boolean;
+}
+
+/** 一笔交易记录（由后端 portfolio 配对生成） */
+export interface Trade {
+  id: number;
+  buy_date: string;
+  buy_price: number;
+  sell_date: string | null;
+  sell_price: number | null;
+  pnl: number | null;
+  pnl_pct: number | null;
+  status: "win" | "loss" | "flat" | "open";
 }
 
 /** 回测请求参数 */
@@ -46,6 +60,7 @@ export interface BacktestResult {
   params: Record<string, number>;
   ohlcv: OhlcvItem[];
   signals: Signal[];
+  trades: Trade[];
   indicators: Indicator[];
   stats: Record<string, string | number | null>;
 }

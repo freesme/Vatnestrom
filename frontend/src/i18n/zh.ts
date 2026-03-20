@@ -54,6 +54,21 @@ const zh = {
   "stats.Omega Ratio": "欧米伽比率",
   "stats.Sortino Ratio": "索提诺比率",
 
+  // 交易记录
+  "trades.title": "交易记录",
+  "trades.total": "共计",
+  "trades.buy_date": "买入日期",
+  "trades.buy_price": "买入价",
+  "trades.sell_date": "卖出日期",
+  "trades.sell_price": "卖出价",
+  "trades.pnl": "盈亏",
+  "trades.pnl_pct": "盈亏%",
+  "trades.status": "状态",
+  "trades.win": "盈利",
+  "trades.loss": "亏损",
+  "trades.flat": "持平",
+  "trades.open": "持仓中",
+
   // 策略名称
   "strategy.ma_cross.name": "双均线交叉",
   "strategy.ma_cross.desc": "经典趋势跟踪策略。快速均线上穿慢速均线时买入（金叉），下穿时卖出（死叉）。适合趋势明显的市场。",

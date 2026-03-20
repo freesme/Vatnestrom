@@ -4,6 +4,7 @@ import { STRATEGIES } from "../strategies";
 import { useI18n } from "../i18n";
 import Chart from "../components/Chart";
 import StatsPanel from "../components/StatsPanel";
+import TradesTable from "../components/TradesTable";
 import StrategyForm from "../components/StrategyForm";
 import { runBacktest } from "../api";
 import type { BacktestResult } from "../types";
@@ -83,6 +84,7 @@ export default function StrategyPage() {
       {result && (
         <div className="space-y-5">
           <Chart ohlcv={result.ohlcv} signals={result.signals} indicators={result.indicators} symbol={result.symbol} />
+          <TradesTable trades={result.trades} />
           <StatsPanel stats={result.stats} />
         </div>
       )}

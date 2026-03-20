@@ -67,12 +67,14 @@ class MACrossStrategy(BaseStrategy):
         return [
             {
                 "name": f"MA{fast_window}",
-                "color": "#f59e0b",   # 橙色 — 快线
+                "color": "#f59e0b",
                 "data": series_to_line_data(fast_ma.ma),
+                "overlay": True,
             },
             {
                 "name": f"MA{slow_window}",
-                "color": "#3b82f6",   # 蓝色 — 慢线
+                "color": "#3b82f6",
                 "data": series_to_line_data(slow_ma.ma),
+                "overlay": True,
             },
         ]
