@@ -23,8 +23,8 @@ def fetch_price(symbol: str, start: str, end: str) -> pd.Series:
     """
     # 通过 vectorbt 封装的 YFData 接口下载数据
     data = vbt.YFData.download(symbol, start=start, end=end)
-    # 提取收盘价列
-    return data.get("Close")
+    # 提取收盘价列，丢弃可能存在的 NaN 行（如当日未收盘的数据）
+    return data.get("Close").dropna()
 
 
 def fetch_ohlcv(symbol: str, start: str, end: str) -> pd.DataFrame:
@@ -51,5 +51,8 @@ def fetch_ohlcv(symbol: str, start: str, end: str) -> pd.DataFrame:
         "close": data.get("Close"),
         "volume": data.get("Volume"),
     })
+
+    # 丢弃包含 NaN 的行（如当日未收盘的不完整数据）
+    df = df.dropna()
 
     return df

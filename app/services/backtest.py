@@ -69,8 +69,8 @@ def run_backtest(config: BacktestConfig) -> dict:
     # 第八步：生成策略对应的技术指标线数据（如均线）
     indicators = strategy.generate_indicators(price, config.strategy_params, ohlcv=ohlcv_df)
 
-    # 将结果组装为字典
-    return {
+    # 将结果组装为字典，并清除所有非 JSON 安全的浮点值（NaN / Inf → None）
+    result = {
         "symbol": config.symbol,
         "strategy": config.strategy,
         "params": config.strategy_params,
@@ -80,6 +80,7 @@ def run_backtest(config: BacktestConfig) -> dict:
         "indicators": indicators,
         "stats": {k: _serialize(v) for k, v in stats.items()},
     }
+    return _sanitize(result)
 
 
 def _format_ohlcv(df: pd.DataFrame) -> list[dict]:
@@ -237,3 +238,34 @@ def _serialize(v):
         return round(v, 6)
     # 其他非原生类型统一转为字符串，原生类型直接返回
     return str(v) if not isinstance(v, (int, float, str, bool, type(None))) else v
+
+
+def _sanitize(obj):
+    """递归将结果转换为纯 JSON 安全的 Python 原生类型
+
+    处理所有 numpy/pandas 类型以及 NaN/Infinity。
+    """
+    if isinstance(obj, dict):
+        return {str(k): _sanitize(v) for k, v in obj.items()}
+    if isinstance(obj, (list, tuple)):
+        return [_sanitize(v) for v in obj]
+    # numpy / Python 浮点 → 检查 NaN/Inf
+    if isinstance(obj, (float, np.floating)):
+        f = float(obj)
+        if f != f or f == float("inf") or f == float("-inf"):  # NaN / Inf
+            return None
+        return f
+    # numpy 整数
+    if isinstance(obj, (np.integer,)):
+        return int(obj)
+    # numpy 布尔
+    if isinstance(obj, (np.bool_,)):
+        return bool(obj)
+    # pandas 时间类型
+    if isinstance(obj, (pd.Timestamp, pd.Timedelta)):
+        return str(obj)
+    # 原生安全类型直接返回
+    if isinstance(obj, (str, int, bool, type(None))):
+        return obj
+    # 兜底：转字符串
+    return str(obj)

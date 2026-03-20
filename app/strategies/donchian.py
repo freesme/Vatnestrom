@@ -19,7 +19,7 @@ from app.strategies.utils import series_to_line_data
 class DonchianStrategy(BaseStrategy):
     """海龟突破（Donchian Channel）策略"""
 
-    def generate_signals(self, price: pd.Series, params: dict) -> tuple[pd.Series, pd.Series]:
+    def generate_signals(self, price: pd.Series, params: dict, ohlcv: pd.DataFrame | None = None) -> tuple[pd.Series, pd.Series]:
         entry_window = params.get("entry_window", 20)
         exit_window = params.get("exit_window", 10)
 
@@ -33,7 +33,7 @@ class DonchianStrategy(BaseStrategy):
 
         return entries, exits
 
-    def generate_indicators(self, price: pd.Series, params: dict) -> list[dict]:
+    def generate_indicators(self, price: pd.Series, params: dict, ohlcv: pd.DataFrame | None = None) -> list[dict]:
         entry_window = params.get("entry_window", 20)
         exit_window = params.get("exit_window", 10)
 

@@ -21,7 +21,7 @@ from app.strategies.utils import series_to_line_data
 class MACDStrategy(BaseStrategy):
     """MACD 信号线交叉策略"""
 
-    def generate_signals(self, price: pd.Series, params: dict) -> tuple[pd.Series, pd.Series]:
+    def generate_signals(self, price: pd.Series, params: dict, ohlcv: pd.DataFrame | None = None) -> tuple[pd.Series, pd.Series]:
         fast_window = params.get("fast_window", 12)
         slow_window = params.get("slow_window", 26)
         signal_window = params.get("signal_window", 9)
@@ -36,7 +36,7 @@ class MACDStrategy(BaseStrategy):
 
         return entries, exits
 
-    def generate_indicators(self, price: pd.Series, params: dict) -> list[dict]:
+    def generate_indicators(self, price: pd.Series, params: dict, ohlcv: pd.DataFrame | None = None) -> list[dict]:
         fast_window = params.get("fast_window", 12)
         slow_window = params.get("slow_window", 26)
         signal_window = params.get("signal_window", 9)

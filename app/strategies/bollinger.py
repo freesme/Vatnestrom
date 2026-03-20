@@ -20,7 +20,7 @@ from app.strategies.utils import series_to_line_data
 class BollingerStrategy(BaseStrategy):
     """布林带突破策略"""
 
-    def generate_signals(self, price: pd.Series, params: dict) -> tuple[pd.Series, pd.Series]:
+    def generate_signals(self, price: pd.Series, params: dict, ohlcv: pd.DataFrame | None = None) -> tuple[pd.Series, pd.Series]:
         bb_window = params.get("bb_window", 20)
         bb_std = params.get("bb_std", 2.0)
 
@@ -33,7 +33,7 @@ class BollingerStrategy(BaseStrategy):
 
         return entries, exits
 
-    def generate_indicators(self, price: pd.Series, params: dict) -> list[dict]:
+    def generate_indicators(self, price: pd.Series, params: dict, ohlcv: pd.DataFrame | None = None) -> list[dict]:
         bb_window = params.get("bb_window", 20)
         bb_std = params.get("bb_std", 2.0)
 

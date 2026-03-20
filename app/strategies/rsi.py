@@ -21,7 +21,7 @@ from app.strategies.utils import series_to_line_data
 class RSIStrategy(BaseStrategy):
     """RSI 超买超卖策略"""
 
-    def generate_signals(self, price: pd.Series, params: dict) -> tuple[pd.Series, pd.Series]:
+    def generate_signals(self, price: pd.Series, params: dict, ohlcv: pd.DataFrame | None = None) -> tuple[pd.Series, pd.Series]:
         rsi_window = params.get("rsi_window", 14)
         oversold = params.get("oversold", 30)
         overbought = params.get("overbought", 70)
@@ -34,7 +34,7 @@ class RSIStrategy(BaseStrategy):
 
         return entries, exits
 
-    def generate_indicators(self, price: pd.Series, params: dict) -> list[dict]:
+    def generate_indicators(self, price: pd.Series, params: dict, ohlcv: pd.DataFrame | None = None) -> list[dict]:
         rsi_window = params.get("rsi_window", 14)
 
         rsi = vbt.RSI.run(price, window=rsi_window)

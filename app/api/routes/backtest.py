@@ -48,16 +48,7 @@ def backtest_run(req: BacktestRequest):
 
     接收回测参数，将 Pydantic 请求模型转换为内部配置对象，
     调用回测服务执行回测，返回统计结果。
-
-    请求示例:
-        POST /backtest/run
-        {
-            "symbol": "AAPL",
-            "strategy": "ma_cross",
-            "strategy_params": {"fast_window": 10, "slow_window": 50}
-        }
     """
-    # 将 API 请求模型转换为内部配置数据类
     config = BacktestConfig(
         symbol=req.symbol,
         start_date=req.start_date,
@@ -67,5 +58,4 @@ def backtest_run(req: BacktestRequest):
         strategy=req.strategy,
         strategy_params=req.strategy_params,
     )
-    # 调用回测服务并返回结果
     return run_backtest(config)

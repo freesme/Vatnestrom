@@ -24,7 +24,7 @@ class MACrossStrategy(BaseStrategy):
     通过交叉关系判断趋势方向，生成买卖信号。
     """
 
-    def generate_signals(self, price: pd.Series, params: dict) -> tuple[pd.Series, pd.Series]:
+    def generate_signals(self, price: pd.Series, params: dict, ohlcv: pd.DataFrame | None = None) -> tuple[pd.Series, pd.Series]:
         """生成均线交叉的买卖信号
 
         Args:
@@ -48,7 +48,7 @@ class MACrossStrategy(BaseStrategy):
 
         return entries, exits
 
-    def generate_indicators(self, price: pd.Series, params: dict) -> list[dict]:
+    def generate_indicators(self, price: pd.Series, params: dict, ohlcv: pd.DataFrame | None = None) -> list[dict]:
         """生成快慢两条均线的指标数据，用于在 K 线图上叠加显示
 
         Args:
