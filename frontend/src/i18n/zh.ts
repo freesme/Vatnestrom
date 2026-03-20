@@ -80,6 +80,12 @@ const zh = {
   "strategy.macd.desc": "基于 MACD 线与信号线的交叉判断趋势变化。MACD 上穿信号线时买入，下穿时卖出。兼顾趋势与动量。",
   "strategy.donchian.name": "海龟突破",
   "strategy.donchian.desc": "经典的唐奇安通道突破策略。价格突破 N 日最高价时买入，跌破 M 日最低价时卖出。海龟交易法的核心。",
+  "strategy.kdj.name": "KDJ 随机指标",
+  "strategy.kdj.desc": "A 股最常用的技术指标之一。%K 线在超卖区上穿 %D 线时买入，在超买区下穿时卖出。适合震荡行情中捕捉短期拐点。",
+  "strategy.mean_reversion.name": "均值回归",
+  "strategy.mean_reversion.desc": "基于价格终将回归均值的统计规律。价格偏离均线超过阈值时反向交易。适合波动较大但无明确趋势的市场。",
+  "strategy.atr_channel.name": "ATR 通道突破",
+  "strategy.atr_channel.desc": "用 ATR（真实波幅均值）构建自适应通道。通道宽度随市场波动自动调整，突破上轨买入、跌破下轨卖出。兼顾趋势跟踪与波动率过滤。",
 
   // 策略参数标签
   "param.fast_window": "快线周期",
@@ -94,6 +100,12 @@ const zh = {
   "param.exit_window": "出场窗口",
   "param.fast_window.macd": "快速 EMA",
   "param.slow_window.macd": "慢速 EMA",
+  "param.k_window": "K 线周期",
+  "param.d_window": "D 线周期",
+  "param.ma_window": "均线周期",
+  "param.threshold": "偏离阈值(%)",
+  "param.atr_window": "ATR 周期",
+  "param.multiplier": "通道倍数",
 } as const;
 
 export default zh;

@@ -7,10 +7,13 @@
   2. 在此处导入并添加到 STRATEGY_REGISTRY 字典中
 """
 
+from app.strategies.atr_channel import ATRChannelStrategy
 from app.strategies.bollinger import BollingerStrategy
 from app.strategies.donchian import DonchianStrategy
+from app.strategies.kdj import KDJStrategy
 from app.strategies.ma_cross import MACrossStrategy
 from app.strategies.macd import MACDStrategy
+from app.strategies.mean_reversion import MeanReversionStrategy
 from app.strategies.rsi import RSIStrategy
 
 # 策略注册表：策略名称 -> 策略类
@@ -21,6 +24,9 @@ STRATEGY_REGISTRY: dict[str, type] = {
     "bollinger": BollingerStrategy,
     "macd": MACDStrategy,
     "donchian": DonchianStrategy,
+    "kdj": KDJStrategy,
+    "mean_reversion": MeanReversionStrategy,
+    "atr_channel": ATRChannelStrategy,
 }
 
 

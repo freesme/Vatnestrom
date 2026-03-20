@@ -18,12 +18,15 @@ class BaseStrategy(ABC):
     """
 
     @abstractmethod
-    def generate_signals(self, price: pd.Series, params: dict) -> tuple[pd.Series, pd.Series]:
+    def generate_signals(
+        self, price: pd.Series, params: dict, ohlcv: pd.DataFrame | None = None
+    ) -> tuple[pd.Series, pd.Series]:
         """根据价格数据和参数生成交易信号
 
         Args:
             price: 收盘价时间序列（pandas Series，索引为日期）
             params: 策略参数字典，由各策略自行定义所需的键值
+            ohlcv: 完整的 OHLCV DataFrame（可选，需要 high/low 的策略使用）
 
         Returns:
             一个元组 (entries, exits)：
@@ -32,7 +35,9 @@ class BaseStrategy(ABC):
         """
         ...
 
-    def generate_indicators(self, price: pd.Series, params: dict) -> list[dict]:
+    def generate_indicators(
+        self, price: pd.Series, params: dict, ohlcv: pd.DataFrame | None = None
+    ) -> list[dict]:
         """生成策略对应的技术指标线数据，用于在图表上叠加显示
 
         默认返回空列表（无指标线）。子类可覆写此方法，返回需要展示的指标线。
@@ -40,6 +45,7 @@ class BaseStrategy(ABC):
         Args:
             price: 收盘价时间序列
             params: 策略参数字典
+            ohlcv: 完整的 OHLCV DataFrame（可选）
 
         Returns:
             指标线列表，每条指标线为一个字典：

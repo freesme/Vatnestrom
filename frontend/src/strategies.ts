@@ -75,4 +75,40 @@ export const STRATEGIES: StrategyMeta[] = [
       { key: "exit_window", labelKey: "param.exit_window", default: 10 },
     ],
   },
+  {
+    id: "kdj",
+    nameKey: "strategy.kdj.name",
+    descKey: "strategy.kdj.desc",
+    icon: "🎯",
+    color: "#f59e0b",
+    params: [
+      { key: "k_window", labelKey: "param.k_window", default: 9 },
+      { key: "d_window", labelKey: "param.d_window", default: 3 },
+      { key: "oversold", labelKey: "param.oversold", default: 20 },
+      { key: "overbought", labelKey: "param.overbought", default: 80 },
+    ],
+  },
+  {
+    id: "mean_reversion",
+    nameKey: "strategy.mean_reversion.name",
+    descKey: "strategy.mean_reversion.desc",
+    icon: "🔄",
+    color: "#14b8a6",
+    params: [
+      { key: "ma_window", labelKey: "param.ma_window", default: 20 },
+      { key: "threshold", labelKey: "param.threshold", default: 5.0, step: 0.5 },
+    ],
+  },
+  {
+    id: "atr_channel",
+    nameKey: "strategy.atr_channel.name",
+    descKey: "strategy.atr_channel.desc",
+    icon: "📡",
+    color: "#f43f5e",
+    params: [
+      { key: "atr_window", labelKey: "param.atr_window", default: 14 },
+      { key: "ma_window", labelKey: "param.ma_window", default: 20 },
+      { key: "multiplier", labelKey: "param.multiplier", default: 2.0, step: 0.1 },
+    ],
+  },
 ];

@@ -42,7 +42,7 @@ def run_backtest(config: BacktestConfig) -> dict:
 
     # 第二步：根据策略名称获取策略实例，并生成买卖信号
     strategy = get_strategy(config.strategy)
-    entries, exits = strategy.generate_signals(price, config.strategy_params)
+    entries, exits = strategy.generate_signals(price, config.strategy_params, ohlcv=ohlcv_df)
 
     # 第三步：使用 vectorbt 构建投资组合，模拟交易过程
     portfolio = vbt.Portfolio.from_signals(
@@ -67,7 +67,7 @@ def run_backtest(config: BacktestConfig) -> dict:
     ohlcv_list = _format_ohlcv(ohlcv_df)
 
     # 第八步：生成策略对应的技术指标线数据（如均线）
-    indicators = strategy.generate_indicators(price, config.strategy_params)
+    indicators = strategy.generate_indicators(price, config.strategy_params, ohlcv=ohlcv_df)
 
     # 将结果组装为字典
     return {

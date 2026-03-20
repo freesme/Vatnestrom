@@ -80,6 +80,12 @@ const en: Record<string, string> = {
   "strategy.macd.desc": "Uses MACD line and signal line crossovers to identify trend changes. Buys on MACD crossing above signal, sells on crossing below. Combines trend and momentum.",
   "strategy.donchian.name": "Turtle Breakout",
   "strategy.donchian.desc": "Classic Donchian Channel breakout strategy. Buys when price breaks N-day high, sells when price breaks M-day low. Core of the Turtle Trading system.",
+  "strategy.kdj.name": "KDJ Stochastic",
+  "strategy.kdj.desc": "Uses %K/%D crossovers in overbought/oversold zones. Buys when %K crosses above %D in oversold zone, sells in overbought zone. Great for ranging markets.",
+  "strategy.mean_reversion.name": "Mean Reversion",
+  "strategy.mean_reversion.desc": "Trades on the assumption that prices revert to the mean. Buys when price drops below MA by a threshold, sells when it rises above. Suits volatile, non-trending markets.",
+  "strategy.atr_channel.name": "ATR Channel Breakout",
+  "strategy.atr_channel.desc": "Builds adaptive channels using ATR (Average True Range). Channel width adjusts to volatility automatically. Buys on upper breakout, sells on lower break. Combines trend following with volatility filtering.",
 
   // Strategy param labels
   "param.fast_window": "Fast Period",
@@ -94,6 +100,12 @@ const en: Record<string, string> = {
   "param.exit_window": "Exit Window",
   "param.fast_window.macd": "Fast EMA",
   "param.slow_window.macd": "Slow EMA",
+  "param.k_window": "K Period",
+  "param.d_window": "D Period",
+  "param.ma_window": "MA Period",
+  "param.threshold": "Threshold (%)",
+  "param.atr_window": "ATR Period",
+  "param.multiplier": "Multiplier",
 };
 
 export default en;
