@@ -15,6 +15,7 @@ const zh = {
   "form.end_date": "结束日期",
   "form.init_cash": "初始资金",
   "form.fees": "手续费",
+  "form.symbol_hint": "美股: AAPL, TSLA | A股: 600519.SS(沪), 000858.SZ(深)",
   "form.run": "执行回测",
   "form.running": "回测中...",
 

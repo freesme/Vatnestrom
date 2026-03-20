@@ -9,11 +9,13 @@ function App() {
   return (
     <I18nProvider>
       <BrowserRouter>
-        <LangToggle />
-        <Routes>
-          <Route path="/" element={<StrategyList />} />
-          <Route path="/strategy/:id" element={<StrategyPage />} />
-        </Routes>
+        <div className="min-h-screen bg-dark-bg font-sans text-text-primary antialiased">
+          <LangToggle />
+          <Routes>
+            <Route path="/" element={<StrategyList />} />
+            <Route path="/strategy/:id" element={<StrategyPage />} />
+          </Routes>
+        </div>
       </BrowserRouter>
     </I18nProvider>
   );

@@ -16,7 +16,6 @@ interface Props {
   symbol: string;
 }
 
-/** K 线图 + 技术指标线 + 买卖标记组件 */
 export default function Chart({ ohlcv, signals, indicators, symbol }: Props) {
   const { t } = useI18n();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -25,28 +24,26 @@ export default function Chart({ ohlcv, signals, indicators, symbol }: Props) {
     const container = containerRef.current;
     if (!container || ohlcv.length === 0) return;
 
-    // 创建图表实例，使用深色主题
     const chart = createChart(container, {
       width: container.clientWidth,
       height: 500,
       layout: {
-        background: { color: "#1e1e2f" },
-        textColor: "#d1d5db",
+        background: { color: "#1a1a2e" },
+        textColor: "#94a3b8",
       },
       grid: {
         vertLines: { color: "#2d2d44" },
         horzLines: { color: "#2d2d44" },
       },
       crosshair: { mode: 0 },
-      timeScale: { timeVisible: false, borderColor: "#3d3d5c" },
+      timeScale: { timeVisible: false, borderColor: "#2d2d44" },
       rightPriceScale: {
         autoScale: true,
         scaleMargins: { top: 0.05, bottom: 0.2 },
-        borderColor: "#3d3d5c",
+        borderColor: "#2d2d44",
       },
     });
 
-    // 添加 K 线系列（红绿配色）
     const candleSeries = chart.addSeries(CandlestickSeries, {
       upColor: "#22c55e",
       downColor: "#ef4444",
@@ -57,19 +54,17 @@ export default function Chart({ ohlcv, signals, indicators, symbol }: Props) {
     });
     candleSeries.setData(ohlcv);
 
-    // 叠加技术指标线（如均线），每条线一个 LineSeries
     for (const indicator of indicators) {
       const lineSeries = chart.addSeries(LineSeries, {
         color: indicator.color,
         lineWidth: 2,
         title: indicator.name,
-        priceLineVisible: false,       // 不在右侧价格轴显示当前值横线
-        lastValueVisible: false,       // 不在右侧价格轴显示最新值标签
+        priceLineVisible: false,
+        lastValueVisible: false,
       });
       lineSeries.setData(indicator.data);
     }
 
-    // 添加成交量柱状图（半透明，贴底显示）
     const volumeSeries = chart.addSeries(HistogramSeries, {
       priceFormat: { type: "volume" },
       priceScaleId: "volume",
@@ -81,11 +76,10 @@ export default function Chart({ ohlcv, signals, indicators, symbol }: Props) {
       ohlcv.map((item) => ({
         time: item.time,
         value: item.volume,
-        color: item.close >= item.open ? "rgba(34,197,94,0.3)" : "rgba(239,68,68,0.3)",
+        color: item.close >= item.open ? "rgba(34,197,94,0.25)" : "rgba(239,68,68,0.25)",
       }))
     );
 
-    // 在 K 线上标注买卖信号（v5 使用 createSeriesMarkers）
     const markers = signals.map((s) => ({
       time: s.date,
       position: s.action === "buy" ? ("belowBar" as const) : ("aboveBar" as const),
@@ -95,10 +89,8 @@ export default function Chart({ ohlcv, signals, indicators, symbol }: Props) {
     }));
     const seriesMarkers = createSeriesMarkers(candleSeries, markers);
 
-    // 自适应显示全部数据
     chart.timeScale().fitContent();
 
-    // 窗口大小变化时自动调整图表宽度
     const handleResize = () => {
       chart.applyOptions({ width: container.clientWidth });
     };
@@ -111,5 +103,9 @@ export default function Chart({ ohlcv, signals, indicators, symbol }: Props) {
     };
   }, [ohlcv, signals, indicators, symbol, t]);
 
-  return <div ref={containerRef} className="chart-container" />;
+  return (
+    <div className="overflow-hidden rounded-xl border border-dark-border">
+      <div ref={containerRef} className="chart-container" />
+    </div>
+  );
 }

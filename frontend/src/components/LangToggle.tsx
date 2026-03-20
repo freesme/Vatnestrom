@@ -5,7 +5,7 @@ export default function LangToggle() {
 
   return (
     <button
-      className="global-lang-toggle"
+      className="fixed top-4 right-4 z-50 rounded-lg border border-dark-border bg-dark-card px-3 py-1.5 text-xs font-semibold text-text-secondary transition-colors hover:bg-dark-card-hover hover:text-text-primary"
       onClick={() => setLang(lang === "zh" ? "en" : "zh")}
     >
       {lang === "zh" ? "EN" : "中文"}

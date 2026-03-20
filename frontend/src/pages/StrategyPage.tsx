@@ -20,9 +20,16 @@ export default function StrategyPage() {
 
   if (!meta) {
     return (
-      <div className="app">
-        <p className="error-msg">{t("app.unknown_strategy")}: {id}</p>
-        <button className="btn-back" onClick={() => navigate("/")}>{t("app.back")}</button>
+      <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6">
+        <p className="mb-4 rounded-lg bg-red-900/40 px-4 py-3 text-red-300">
+          {t("app.unknown_strategy")}: {id}
+        </p>
+        <button
+          className="text-sm text-text-secondary transition-colors hover:text-text-primary"
+          onClick={() => navigate("/")}
+        >
+          {t("app.back")}
+        </button>
       </div>
     );
   }
@@ -45,26 +52,39 @@ export default function StrategyPage() {
   };
 
   return (
-    <div className="app">
-      <button className="btn-back" onClick={() => navigate("/")}>{t("app.back")}</button>
+    <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
+      <button
+        className="mb-5 text-sm text-text-secondary transition-colors hover:text-text-primary"
+        onClick={() => navigate("/")}
+      >
+        {t("app.back")}
+      </button>
 
-      <div className="strategy-page-header" style={{ borderLeftColor: meta.color }}>
-        <span className="strategy-icon-lg">{meta.icon}</span>
-        <div>
-          <h1>{t(meta.nameKey)}</h1>
-          <p className="strategy-page-desc">{t(meta.descKey)}</p>
+      {/* 策略头部 */}
+      <div
+        className="mb-6 flex items-center gap-4 rounded-xl border border-dark-border bg-dark-card p-5"
+        style={{ borderLeftWidth: 4, borderLeftColor: meta.color }}
+      >
+        <span className="text-4xl">{meta.icon}</span>
+        <div className="min-w-0">
+          <h1 className="mb-1 text-xl font-bold">{t(meta.nameKey)}</h1>
+          <p className="text-sm leading-relaxed text-text-secondary">{t(meta.descKey)}</p>
         </div>
       </div>
 
       <StrategyForm meta={meta} onSubmit={handleSubmit} loading={loading} />
 
-      {error && <div className="error-msg">{error}</div>}
+      {error && (
+        <div className="mb-5 rounded-lg bg-red-900/40 px-4 py-3 text-sm text-red-300">
+          {error}
+        </div>
+      )}
 
       {result && (
-        <>
+        <div className="space-y-5">
           <Chart ohlcv={result.ohlcv} signals={result.signals} indicators={result.indicators} symbol={result.symbol} />
           <StatsPanel stats={result.stats} />
-        </>
+        </div>
       )}
     </div>
   );

@@ -7,31 +7,44 @@ export default function StrategyList() {
   const { t } = useI18n();
 
   return (
-    <div className="app">
-      <h1>{t("app.title")}</h1>
-      <p className="page-subtitle">{t("app.subtitle")}</p>
+    <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6">
+      <div className="mb-10 text-center">
+        <h1 className="mb-2 text-3xl font-bold tracking-tight">{t("app.title")}</h1>
+        <p className="text-text-secondary">{t("app.subtitle")}</p>
+      </div>
 
-      <div className="strategy-grid">
+      <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {STRATEGIES.map((s) => (
           <div
             key={s.id}
-            className="strategy-card"
-            style={{ borderColor: s.color }}
+            className="group cursor-pointer rounded-xl border border-dark-border bg-dark-card p-6 transition-all duration-200 hover:-translate-y-1 hover:border-transparent hover:shadow-lg hover:shadow-black/30"
+            style={{ borderLeftWidth: 3, borderLeftColor: s.color }}
             onClick={() => navigate(`/strategy/${s.id}`)}
           >
-            <div className="strategy-card-header">
-              <span className="strategy-icon">{s.icon}</span>
-              <h2 className="strategy-name">{t(s.nameKey)}</h2>
+            <div className="mb-3 flex items-center gap-3">
+              <span className="text-2xl">{s.icon}</span>
+              <h2 className="text-base font-semibold">{t(s.nameKey)}</h2>
             </div>
-            <p className="strategy-desc">{t(s.descKey)}</p>
-            <div className="strategy-params-preview">
+
+            <p className="mb-4 text-sm leading-relaxed text-text-secondary">
+              {t(s.descKey)}
+            </p>
+
+            <div className="mb-4 flex flex-wrap gap-1.5">
               {s.params.map((p) => (
-                <span key={p.key} className="param-tag">
+                <span
+                  key={p.key}
+                  className="rounded-full bg-dark-input px-2.5 py-0.5 text-xs text-text-muted"
+                >
                   {t(p.labelKey)}: {p.default}
                 </span>
               ))}
             </div>
-            <div className="strategy-card-footer" style={{ color: s.color }}>
+
+            <div
+              className="text-right text-sm font-semibold opacity-70 transition-opacity group-hover:opacity-100"
+              style={{ color: s.color }}
+            >
               {t("app.start_backtest")}
             </div>
           </div>

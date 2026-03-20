@@ -15,6 +15,7 @@ const en: Record<string, string> = {
   "form.end_date": "End Date",
   "form.init_cash": "Initial Cash",
   "form.fees": "Fees",
+  "form.symbol_hint": "US: AAPL, TSLA | CN: 600519.SS (SH), 000858.SZ (SZ)",
   "form.run": "Run Backtest",
   "form.running": "Running...",
 
