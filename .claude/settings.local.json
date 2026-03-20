@@ -1,0 +1,28 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(uv sync:*)",
+      "Bash(where uv:*)",
+      "Read(//c/Users/WIN10/.local/bin/**)",
+      "Read(//c/Users/WIN10/AppData/Local/Programs/**)",
+      "Read(//c/Users/WIN10/scoop/shims/**)",
+      "Bash(pip show:*)",
+      "Bash(.venv/Scripts/pip install:*)",
+      "Bash(.venv/Scripts/python.exe -m pip install vectorbt yfinance)",
+      "Bash(.venv/Scripts/python.exe -c \"import sys; print\\(sys.version\\)\")",
+      "Bash(pip install:*)",
+      "Bash(python -m pip install uv)",
+      "Bash(.venv/Scripts/python.exe -c \"import vectorbt; print\\(''vectorbt'', vectorbt.__version__\\)\")",
+      "Bash(.venv/Scripts/python.exe -m pytest tests/test_ma_cross.py -v)",
+      "Bash(.venv/Scripts/python.exe -m pip install pytest)",
+      "Bash(uv add:*)",
+      "Bash(uv run:*)",
+      "Bash(npx create-vite@latest frontend --template react-ts)",
+      "Bash(npm install:*)",
+      "Bash(npx tsc:*)",
+      "Bash(npm run:*)",
+      "Bash(npm ls:*)",
+      "Bash(node -e \"const lc = require\\(''lightweight-charts''\\); const keys = Object.keys\\(lc\\).filter\\(k => k.toLowerCase\\(\\).includes\\(''marker''\\)\\); console.log\\(keys\\)\")"
+    ]
+  }
+}

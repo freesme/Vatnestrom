@@ -1,0 +1,22 @@
+# Test your FastAPI endpoints
+
+GET http://127.0.0.1:8000/
+Accept: application/json
+
+###
+
+GET http://127.0.0.1:8000/hello/User
+Accept: application/json
+
+###
+
+POST http://127.0.0.1:8000/backtest/run
+Content-Type: application/json
+
+  {
+    "symbol": "AAPL",
+    "start_date": "2025-01-01",
+    "end_date": "2026-03-11",
+    "strategy": "ma_cross",
+    "strategy_params": {"fast_window": 15, "slow_window": 30}
+  }

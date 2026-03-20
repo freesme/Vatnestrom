@@ -1,0 +1,51 @@
+/** 单根 K 线数据，对应 lightweight-charts 的 CandlestickData */
+export interface OhlcvItem {
+  time: string;
+  open: number;
+  high: number;
+  low: number;
+  close: number;
+  volume: number;
+}
+
+/** 买卖信号点位 */
+export interface Signal {
+  date: string;
+  action: "buy" | "sell";
+  price: number;
+}
+
+/** 技术指标线的单个数据点 */
+export interface IndicatorPoint {
+  time: string;
+  value: number;
+}
+
+/** 一条技术指标线（如 MA5、MA20） */
+export interface Indicator {
+  name: string;
+  color: string;
+  data: IndicatorPoint[];
+}
+
+/** 回测请求参数 */
+export interface BacktestRequest {
+  symbol: string;
+  start_date: string;
+  end_date: string;
+  init_cash: number;
+  fees: number;
+  strategy: string;
+  strategy_params: Record<string, number>;
+}
+
+/** 回测 API 返回结果 */
+export interface BacktestResult {
+  symbol: string;
+  strategy: string;
+  params: Record<string, number>;
+  ohlcv: OhlcvItem[];
+  signals: Signal[];
+  indicators: Indicator[];
+  stats: Record<string, string | number | null>;
+}
