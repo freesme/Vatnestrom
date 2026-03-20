@@ -7,12 +7,20 @@
   2. 在此处导入并添加到 STRATEGY_REGISTRY 字典中
 """
 
+from app.strategies.bollinger import BollingerStrategy
+from app.strategies.donchian import DonchianStrategy
 from app.strategies.ma_cross import MACrossStrategy
+from app.strategies.macd import MACDStrategy
+from app.strategies.rsi import RSIStrategy
 
 # 策略注册表：策略名称 -> 策略类
 # API 请求中通过 strategy 字段指定名称来选择策略
 STRATEGY_REGISTRY: dict[str, type] = {
     "ma_cross": MACrossStrategy,
+    "rsi": RSIStrategy,
+    "bollinger": BollingerStrategy,
+    "macd": MACDStrategy,
+    "donchian": DonchianStrategy,
 }
 
 

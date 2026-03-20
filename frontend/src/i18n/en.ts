@@ -1,0 +1,83 @@
+const en: Record<string, string> = {
+  // General
+  "app.title": "VectorBT Playground",
+  "app.subtitle": "Choose a trading strategy to start backtesting",
+  "app.start_backtest": "Start Backtest →",
+  "app.back": "← Back to Strategies",
+  "app.unknown_strategy": "Unknown strategy",
+  "app.backtest_failed": "Backtest failed",
+
+  // Form
+  "form.basic_params": "Basic Parameters",
+  "form.strategy_params": "Strategy Parameters",
+  "form.symbol": "Symbol",
+  "form.start_date": "Start Date",
+  "form.end_date": "End Date",
+  "form.init_cash": "Initial Cash",
+  "form.fees": "Fees",
+  "form.run": "Run Backtest",
+  "form.running": "Running...",
+
+  // Chart
+  "chart.buy": "Buy",
+  "chart.sell": "Sell",
+
+  // Stats panel
+  "stats.title": "Backtest Statistics",
+  "stats.Start": "Start",
+  "stats.End": "End",
+  "stats.Period": "Period",
+  "stats.Start Value": "Start Value",
+  "stats.End Value": "End Value",
+  "stats.Total Return [%]": "Total Return [%]",
+  "stats.Benchmark Return [%]": "Benchmark Return [%]",
+  "stats.Max Gross Exposure [%]": "Max Gross Exposure [%]",
+  "stats.Total Fees Paid": "Total Fees Paid",
+  "stats.Max Drawdown [%]": "Max Drawdown [%]",
+  "stats.Max Drawdown Duration": "Max Drawdown Duration",
+  "stats.Total Trades": "Total Trades",
+  "stats.Total Closed Trades": "Total Closed Trades",
+  "stats.Total Open Trades": "Total Open Trades",
+  "stats.Open Trade PnL": "Open Trade PnL",
+  "stats.Win Rate [%]": "Win Rate [%]",
+  "stats.Best Trade [%]": "Best Trade [%]",
+  "stats.Worst Trade [%]": "Worst Trade [%]",
+  "stats.Avg Winning Trade [%]": "Avg Winning Trade [%]",
+  "stats.Avg Losing Trade [%]": "Avg Losing Trade [%]",
+  "stats.Avg Winning Trade Duration": "Avg Winning Trade Duration",
+  "stats.Avg Losing Trade Duration": "Avg Losing Trade Duration",
+  "stats.Profit Factor": "Profit Factor",
+  "stats.Expectancy": "Expectancy",
+  "stats.Sharpe Ratio": "Sharpe Ratio",
+  "stats.Calmar Ratio": "Calmar Ratio",
+  "stats.Omega Ratio": "Omega Ratio",
+  "stats.Sortino Ratio": "Sortino Ratio",
+
+  // Strategy names
+  "strategy.ma_cross.name": "MA Crossover",
+  "strategy.ma_cross.desc": "Classic trend-following strategy. Buys on golden cross (fast MA above slow MA), sells on death cross. Best for trending markets.",
+  "strategy.rsi.name": "RSI Overbought/Oversold",
+  "strategy.rsi.desc": "Uses Relative Strength Index to detect overbought/oversold conditions. Buys when RSI drops below oversold, sells above overbought. Suits ranging markets.",
+  "strategy.bollinger.name": "Bollinger Bands Breakout",
+  "strategy.bollinger.desc": "Uses Bollinger Bands to detect price breakouts. Buys when price crosses below lower band, sells above upper band. Mean-reversion approach.",
+  "strategy.macd.name": "MACD Signal Crossover",
+  "strategy.macd.desc": "Uses MACD line and signal line crossovers to identify trend changes. Buys on MACD crossing above signal, sells on crossing below. Combines trend and momentum.",
+  "strategy.donchian.name": "Turtle Breakout",
+  "strategy.donchian.desc": "Classic Donchian Channel breakout strategy. Buys when price breaks N-day high, sells when price breaks M-day low. Core of the Turtle Trading system.",
+
+  // Strategy param labels
+  "param.fast_window": "Fast Period",
+  "param.slow_window": "Slow Period",
+  "param.rsi_window": "RSI Period",
+  "param.oversold": "Oversold",
+  "param.overbought": "Overbought",
+  "param.bb_window": "Window",
+  "param.bb_std": "Std Dev Multiplier",
+  "param.signal_window": "Signal Period",
+  "param.entry_window": "Entry Window",
+  "param.exit_window": "Exit Window",
+  "param.fast_window.macd": "Fast EMA",
+  "param.slow_window.macd": "Slow EMA",
+};
+
+export default en;

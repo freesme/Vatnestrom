@@ -10,11 +10,11 @@
   - slow_window: 慢速均线的计算窗口期，默认 50 天
 """
 
-import numpy as np
 import pandas as pd
 import vectorbt as vbt
 
 from app.strategies.base import BaseStrategy
+from app.strategies.utils import series_to_line_data
 
 
 class MACrossStrategy(BaseStrategy):
@@ -68,33 +68,11 @@ class MACrossStrategy(BaseStrategy):
             {
                 "name": f"MA{fast_window}",
                 "color": "#f59e0b",   # 橙色 — 快线
-                "data": _series_to_line_data(fast_ma.ma),
+                "data": series_to_line_data(fast_ma.ma),
             },
             {
                 "name": f"MA{slow_window}",
                 "color": "#3b82f6",   # 蓝色 — 慢线
-                "data": _series_to_line_data(slow_ma.ma),
+                "data": series_to_line_data(slow_ma.ma),
             },
         ]
-
-
-def _series_to_line_data(series: pd.Series) -> list[dict]:
-    """将 pandas Series 转换为 lightweight-charts LineSeries 所需的数据格式
-
-    跳过 NaN 值（均线窗口期内前几个数据点没有值）。
-
-    Args:
-        series: 指标值的时间序列
-
-    Returns:
-        [{"time": "2024-01-02", "value": 150.25}, ...] 格式的列表
-    """
-    data = []
-    for date, value in series.items():
-        if np.isnan(value):
-            continue
-        data.append({
-            "time": str(date.date()),
-            "value": round(float(value), 2),
-        })
-    return data

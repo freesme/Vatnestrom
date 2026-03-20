@@ -1,0 +1,83 @@
+const zh = {
+  // 通用
+  "app.title": "VectorBT Playground",
+  "app.subtitle": "选择一个交易策略开始回测",
+  "app.start_backtest": "开始回测 →",
+  "app.back": "← 返回策略列表",
+  "app.unknown_strategy": "未知策略",
+  "app.backtest_failed": "回测失败",
+
+  // 表单
+  "form.basic_params": "基本参数",
+  "form.strategy_params": "策略参数",
+  "form.symbol": "股票代码",
+  "form.start_date": "起始日期",
+  "form.end_date": "结束日期",
+  "form.init_cash": "初始资金",
+  "form.fees": "手续费",
+  "form.run": "执行回测",
+  "form.running": "回测中...",
+
+  // 图表
+  "chart.buy": "买",
+  "chart.sell": "卖",
+
+  // 统计面板
+  "stats.title": "回测统计",
+  "stats.Start": "起始日期",
+  "stats.End": "结束日期",
+  "stats.Period": "回测周期",
+  "stats.Start Value": "初始资金",
+  "stats.End Value": "期末资金",
+  "stats.Total Return [%]": "总收益率 [%]",
+  "stats.Benchmark Return [%]": "基准收益率 [%]",
+  "stats.Max Gross Exposure [%]": "最大总敞口 [%]",
+  "stats.Total Fees Paid": "总手续费",
+  "stats.Max Drawdown [%]": "最大回撤 [%]",
+  "stats.Max Drawdown Duration": "最大回撤持续时间",
+  "stats.Total Trades": "总交易次数",
+  "stats.Total Closed Trades": "已平仓交易",
+  "stats.Total Open Trades": "未平仓交易",
+  "stats.Open Trade PnL": "未平仓盈亏",
+  "stats.Win Rate [%]": "胜率 [%]",
+  "stats.Best Trade [%]": "最佳交易 [%]",
+  "stats.Worst Trade [%]": "最差交易 [%]",
+  "stats.Avg Winning Trade [%]": "平均盈利交易 [%]",
+  "stats.Avg Losing Trade [%]": "平均亏损交易 [%]",
+  "stats.Avg Winning Trade Duration": "平均盈利持仓时间",
+  "stats.Avg Losing Trade Duration": "平均亏损持仓时间",
+  "stats.Profit Factor": "盈亏比",
+  "stats.Expectancy": "期望收益",
+  "stats.Sharpe Ratio": "夏普比率",
+  "stats.Calmar Ratio": "卡尔玛比率",
+  "stats.Omega Ratio": "欧米伽比率",
+  "stats.Sortino Ratio": "索提诺比率",
+
+  // 策略名称
+  "strategy.ma_cross.name": "双均线交叉",
+  "strategy.ma_cross.desc": "经典趋势跟踪策略。快速均线上穿慢速均线时买入（金叉），下穿时卖出（死叉）。适合趋势明显的市场。",
+  "strategy.rsi.name": "RSI 超买超卖",
+  "strategy.rsi.desc": "基于相对强弱指数判断市场超买超卖状态。RSI 低于超卖线时买入，高于超买线时卖出。适合震荡市场。",
+  "strategy.bollinger.name": "布林带突破",
+  "strategy.bollinger.desc": "基于布林带通道判断价格突破。价格下穿下轨时买入，上穿上轨时卖出。利用统计学原理捕捉价格回归。",
+  "strategy.macd.name": "MACD 信号线交叉",
+  "strategy.macd.desc": "基于 MACD 线与信号线的交叉判断趋势变化。MACD 上穿信号线时买入，下穿时卖出。兼顾趋势与动量。",
+  "strategy.donchian.name": "海龟突破",
+  "strategy.donchian.desc": "经典的唐奇安通道突破策略。价格突破 N 日最高价时买入，跌破 M 日最低价时卖出。海龟交易法的核心。",
+
+  // 策略参数标签
+  "param.fast_window": "快线周期",
+  "param.slow_window": "慢线周期",
+  "param.rsi_window": "RSI 周期",
+  "param.oversold": "超卖阈值",
+  "param.overbought": "超买阈值",
+  "param.bb_window": "窗口周期",
+  "param.bb_std": "标准差倍数",
+  "param.signal_window": "信号线周期",
+  "param.entry_window": "入场窗口",
+  "param.exit_window": "出场窗口",
+  "param.fast_window.macd": "快速 EMA",
+  "param.slow_window.macd": "慢速 EMA",
+} as const;
+
+export default zh;

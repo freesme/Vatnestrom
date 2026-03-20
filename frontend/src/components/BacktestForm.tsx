@@ -9,7 +9,7 @@ interface Props {
 /** 回测参数表单组件 */
 export default function BacktestForm({ onSubmit, loading }: Props) {
   const [symbol, setSymbol] = useState("AAPL");
-  const [startDate, setStartDate] = useState("2024-01-01");
+  const [startDate, setStartDate] = useState("2025-01-01");
   const [endDate, setEndDate] = useState("2025-12-31");
   const [initCash, setInitCash] = useState(10000);
   const [fees, setFees] = useState(0.001);

@@ -7,6 +7,7 @@ import {
   createSeriesMarkers,
 } from "lightweight-charts";
 import type { OhlcvItem, Signal, Indicator } from "../types";
+import { useI18n } from "../i18n";
 
 interface Props {
   ohlcv: OhlcvItem[];
@@ -17,6 +18,7 @@ interface Props {
 
 /** K 线图 + 技术指标线 + 买卖标记组件 */
 export default function Chart({ ohlcv, signals, indicators, symbol }: Props) {
+  const { t } = useI18n();
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -37,6 +39,11 @@ export default function Chart({ ohlcv, signals, indicators, symbol }: Props) {
       },
       crosshair: { mode: 0 },
       timeScale: { timeVisible: false, borderColor: "#3d3d5c" },
+      rightPriceScale: {
+        autoScale: true,
+        scaleMargins: { top: 0.05, bottom: 0.2 },
+        borderColor: "#3d3d5c",
+      },
     });
 
     // 添加 K 线系列（红绿配色）
@@ -84,7 +91,7 @@ export default function Chart({ ohlcv, signals, indicators, symbol }: Props) {
       position: s.action === "buy" ? ("belowBar" as const) : ("aboveBar" as const),
       color: s.action === "buy" ? "#22c55e" : "#ef4444",
       shape: s.action === "buy" ? ("arrowUp" as const) : ("arrowDown" as const),
-      text: s.action === "buy" ? `买 ${s.price}` : `卖 ${s.price}`,
+      text: s.action === "buy" ? `${t("chart.buy")} ${s.price}` : `${t("chart.sell")} ${s.price}`,
     }));
     const seriesMarkers = createSeriesMarkers(candleSeries, markers);
 
@@ -102,7 +109,7 @@ export default function Chart({ ohlcv, signals, indicators, symbol }: Props) {
       seriesMarkers.detach();
       chart.remove();
     };
-  }, [ohlcv, signals, indicators, symbol]);
+  }, [ohlcv, signals, indicators, symbol, t]);
 
   return <div ref={containerRef} className="chart-container" />;
 }
