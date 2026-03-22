@@ -40,3 +40,18 @@ vectorbt 是一个基于 Python 的量化交易回测与分析库，核心特点
   - 支持 Numba JIT 编译自定义函数
   - 灵活的数据对齐和广播机制（类似 pandas）
   - 可与 pandas、NumPy 无缝集成
+
+
+  uv sync
+  uv run uvicorn main:app --reload
+
+  # 终端 2：前端
+  cd frontend/
+  npm install
+  npm run dev
+
+  启动后访问：
+
+  - 前端：http://localhost:5173
+  - 后端接口文档：http://127.0.0.1:8000/docs
+  - 后端健康检查：http://127.0.0.1:8000/
