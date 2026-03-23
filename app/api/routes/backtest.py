@@ -8,11 +8,16 @@
   - POST /backtest/run  执行一次回测，返回统计结果
 """
 
+import logging
+import time
+
 from fastapi import APIRouter
 from pydantic import BaseModel
 
 from app.core.config import BacktestConfig
 from app.services.backtest import run_backtest
+
+logger = logging.getLogger(__name__)
 
 # 创建路由器，统一前缀为 /backtest，在 Swagger 文档中归类到 "backtest" 标签
 router = APIRouter(prefix="/backtest", tags=["backtest"])
@@ -49,6 +54,8 @@ def backtest_run(req: BacktestRequest):
     接收回测参数，将 Pydantic 请求模型转换为内部配置对象，
     调用回测服务执行回测，返回统计结果。
     """
+    logger.info("POST /backtest/run | symbol=%s strategy=%s", req.symbol, req.strategy)
+    t0 = time.perf_counter()
     config = BacktestConfig(
         symbol=req.symbol,
         start_date=req.start_date,
@@ -58,4 +65,6 @@ def backtest_run(req: BacktestRequest):
         strategy=req.strategy,
         strategy_params=req.strategy_params,
     )
-    return run_backtest(config)
+    result = run_backtest(config)
+    logger.info("POST /backtest/run complete | %.3fs", time.perf_counter() - t0)
+    return result

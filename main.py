@@ -6,14 +6,24 @@
 启动后访问 http://127.0.0.1:8000/docs 查看自动生成的 API 文档
 """
 
+import logging
 from pathlib import Path
 
 from fastapi import FastAPI
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s %(levelname)s [%(name)s] %(message)s",
+    datefmt="%Y-%m-%d %H:%M:%S",
+)
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
 from app.api.routes.backtest import router as backtest_router
+
+# 启动时预加载 vectorbt，避免首次请求因 import + numba JIT 编译而缓慢
+import vectorbt as vbt  # noqa: F401
 
 # 创建 FastAPI 应用实例
 app = FastAPI(title="VectorBT Playground")

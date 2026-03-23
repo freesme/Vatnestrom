@@ -11,6 +11,9 @@
   4. 将结果序列化为 JSON 兼容格式返回
 """
 
+import logging
+import time
+
 import numpy as np
 import pandas as pd
 import vectorbt as vbt
@@ -18,6 +21,8 @@ import vectorbt as vbt
 from app.core.config import BacktestConfig
 from app.services.data import fetch_ohlcv
 from app.strategies import get_strategy
+
+logger = logging.getLogger(__name__)
 
 
 def run_backtest(config: BacktestConfig) -> dict:
@@ -35,16 +40,25 @@ def run_backtest(config: BacktestConfig) -> dict:
         - signals: 买卖信号及对应价格点位
         - stats: 回测统计指标（总收益率、夏普比率、最大回撤等）
     """
+    t_total = time.perf_counter()
+    logger.info("backtest start | symbol=%s strategy=%s period=%s~%s",
+                config.symbol, config.strategy, config.start_date, config.end_date)
+
     # 第一步：获取完整的 OHLCV 历史数据
+    t0 = time.perf_counter()
     ohlcv_df = fetch_ohlcv(config.symbol, config.start_date, config.end_date)
+    logger.info("fetch_ohlcv done | %.3fs | rows=%d", time.perf_counter() - t0, len(ohlcv_df))
     # 提取收盘价用于策略信号计算
     price = ohlcv_df["close"]
 
     # 第二步：根据策略名称获取策略实例，并生成买卖信号
+    t0 = time.perf_counter()
     strategy = get_strategy(config.strategy)
     entries, exits = strategy.generate_signals(price, config.strategy_params, ohlcv=ohlcv_df)
+    logger.info("generate_signals done | %.3fs", time.perf_counter() - t0)
 
     # 第三步：使用 vectorbt 构建投资组合，模拟交易过程
+    t0 = time.perf_counter()
     portfolio = vbt.Portfolio.from_signals(
         close=price,          # 收盘价序列
         entries=entries,      # 买入信号
@@ -53,23 +67,35 @@ def run_backtest(config: BacktestConfig) -> dict:
         fees=config.fees,     # 手续费比例
         freq=config.freq,     # 数据频率
     )
+    logger.info("portfolio.from_signals done | %.3fs", time.perf_counter() - t0)
 
     # 第四步：获取回测统计指标（收益率、夏普比率、最大回撤等）
+    t0 = time.perf_counter()
     stats = portfolio.stats()
+    logger.info("portfolio.stats done | %.3fs", time.perf_counter() - t0)
 
     # 第五步：从 portfolio 提取实际执行的买卖信号（而非原始策略信号）
+    t0 = time.perf_counter()
     signals = _extract_portfolio_signals(portfolio, price)
+    logger.info("extract_signals done | %.3fs | count=%d", time.perf_counter() - t0, len(signals))
 
     # 第六步：从 portfolio 提取完整交易记录（配对的买入卖出）
+    t0 = time.perf_counter()
     trades = _extract_trades(portfolio, price)
+    logger.info("extract_trades done | %.3fs | count=%d", time.perf_counter() - t0, len(trades))
 
     # 第七步：将 OHLCV 数据转换为前端 lightweight-charts 所需的格式
+    t0 = time.perf_counter()
     ohlcv_list = _format_ohlcv(ohlcv_df)
+    logger.info("format_ohlcv done | %.3fs", time.perf_counter() - t0)
 
     # 第八步：生成策略对应的技术指标线数据（如均线）
+    t0 = time.perf_counter()
     indicators = strategy.generate_indicators(price, config.strategy_params, ohlcv=ohlcv_df)
+    logger.info("generate_indicators done | %.3fs", time.perf_counter() - t0)
 
     # 将结果组装为字典，并清除所有非 JSON 安全的浮点值（NaN / Inf → None）
+    t0 = time.perf_counter()
     result = {
         "symbol": config.symbol,
         "strategy": config.strategy,
@@ -80,7 +106,11 @@ def run_backtest(config: BacktestConfig) -> dict:
         "indicators": indicators,
         "stats": {k: _serialize(v) for k, v in stats.items()},
     }
-    return _sanitize(result)
+    result = _sanitize(result)
+    logger.info("sanitize done | %.3fs", time.perf_counter() - t0)
+
+    logger.info("backtest complete | total=%.3fs", time.perf_counter() - t_total)
+    return result
 
 
 def _format_ohlcv(df: pd.DataFrame) -> list[dict]:
