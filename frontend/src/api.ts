@@ -1,6 +1,6 @@
 import type { BacktestRequest, BacktestResult } from "./types";
 
-const API_BASE = "http://localhost:8000";
+const API_BASE = import.meta.env.DEV ? "http://localhost:8000" : "";
 
 /** 调用后端回测接口 */
 export async function runBacktest(params: BacktestRequest): Promise<BacktestResult> {
