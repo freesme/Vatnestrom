@@ -42,10 +42,12 @@ vectorbt 是一个基于 Python 的量化交易回测与分析库，核心特点
   - 可与 pandas、NumPy 无缝集成
 
 
+  ```shell
   uv sync
   uv run uvicorn main:app --reload
+  ```
 
-  # 终端 2：前端
+  ## 终端 2：前端
   cd frontend/
   npm install
   npm run dev
@@ -55,3 +57,8 @@ vectorbt 是一个基于 Python 的量化交易回测与分析库，核心特点
   - 前端：http://localhost:5173
   - 后端接口文档：http://127.0.0.1:8000/docs
   - 后端健康检查：http://127.0.0.1:8000/
+
+  ## 使用 docker 启动
+  ```shell
+  docker compose up -d
+  ```
