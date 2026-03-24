@@ -111,4 +111,15 @@ export const STRATEGIES: StrategyMeta[] = [
       { key: "multiplier", labelKey: "param.multiplier", default: 2.0, step: 0.1 },
     ],
   },
+  {
+    id: "supertrend",
+    nameKey: "strategy.supertrend.name",
+    descKey: "strategy.supertrend.desc",
+    icon: "🚀",
+    color: "#a855f7",
+    params: [
+      { key: "st_length", labelKey: "param.st_length", default: 10 },
+      { key: "st_multiplier", labelKey: "param.st_multiplier", default: 3.0, step: 0.1 },
+    ],
+  },
 ];

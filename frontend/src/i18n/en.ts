@@ -86,6 +86,8 @@ const en: Record<string, string> = {
   "strategy.mean_reversion.desc": "Trades on the assumption that prices revert to the mean. Buys when price drops below MA by a threshold, sells when it rises above. Suits volatile, non-trending markets.",
   "strategy.atr_channel.name": "ATR Channel Breakout",
   "strategy.atr_channel.desc": "Builds adaptive channels using ATR (Average True Range). Channel width adjusts to volatility automatically. Buys on upper breakout, sells on lower break. Combines trend following with volatility filtering.",
+  "strategy.supertrend.name": "SuperTrend",
+  "strategy.supertrend.desc": "Powered by pandas-ta. SuperTrend uses ATR to dynamically calculate trend support/resistance lines. Generates signals when trend direction flips. Great for medium-to-long term trend following with noise filtering.",
 
   // Strategy param labels
   "param.fast_window": "Fast Period",
@@ -106,6 +108,8 @@ const en: Record<string, string> = {
   "param.threshold": "Threshold (%)",
   "param.atr_window": "ATR Period",
   "param.multiplier": "Multiplier",
+  "param.st_length": "SuperTrend Period",
+  "param.st_multiplier": "Multiplier",
 
   // Batch backtest
   "batch.summary_title": "Batch Comparison",

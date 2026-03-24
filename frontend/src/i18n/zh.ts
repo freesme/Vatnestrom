@@ -86,6 +86,8 @@ const zh = {
   "strategy.mean_reversion.desc": "基于价格终将回归均值的统计规律。价格偏离均线超过阈值时反向交易。适合波动较大但无明确趋势的市场。",
   "strategy.atr_channel.name": "ATR 通道突破",
   "strategy.atr_channel.desc": "用 ATR（真实波幅均值）构建自适应通道。通道宽度随市场波动自动调整，突破上轨买入、跌破下轨卖出。兼顾趋势跟踪与波动率过滤。",
+  "strategy.supertrend.name": "SuperTrend 超级趋势",
+  "strategy.supertrend.desc": "基于 pandas-ta 的 SuperTrend 指标。利用 ATR 动态计算趋势支撑/阻力线，趋势方向翻转时产生买卖信号。适合中长期趋势跟踪，能有效过滤震荡噪音。",
 
   // 策略参数标签
   "param.fast_window": "快线周期",
@@ -106,6 +108,8 @@ const zh = {
   "param.threshold": "偏离阈值(%)",
   "param.atr_window": "ATR 周期",
   "param.multiplier": "通道倍数",
+  "param.st_length": "SuperTrend 周期",
+  "param.st_multiplier": "通道倍数",
 
   // 批量回测
   "batch.summary_title": "批量对比",

@@ -15,6 +15,7 @@ from app.strategies.ma_cross import MACrossStrategy
 from app.strategies.macd import MACDStrategy
 from app.strategies.mean_reversion import MeanReversionStrategy
 from app.strategies.rsi import RSIStrategy
+from app.strategies.supertrend import SuperTrendStrategy
 
 # 策略注册表：策略名称 -> 策略类
 # API 请求中通过 strategy 字段指定名称来选择策略
@@ -27,6 +28,7 @@ STRATEGY_REGISTRY: dict[str, type] = {
     "kdj": KDJStrategy,
     "mean_reversion": MeanReversionStrategy,
     "atr_channel": ATRChannelStrategy,
+    "supertrend": SuperTrendStrategy,
 }
 
 
