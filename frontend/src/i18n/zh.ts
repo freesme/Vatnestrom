@@ -15,7 +15,7 @@ const zh = {
   "form.end_date": "结束日期",
   "form.init_cash": "初始资金",
   "form.fees": "手续费",
-  "form.symbol_hint": "美股: AAPL, TSLA | A股: 600519.SS(沪), 000858.SZ(深)",
+  "form.symbol_hint": "美股: AAPL, TSLA | A股: 600519.SS(沪), 000858.SZ(深) | 逗号分隔可批量回测",
   "form.run": "执行回测",
   "form.running": "回测中...",
 
@@ -106,6 +106,17 @@ const zh = {
   "param.threshold": "偏离阈值(%)",
   "param.atr_window": "ATR 周期",
   "param.multiplier": "通道倍数",
+
+  // 批量回测
+  "batch.summary_title": "批量对比",
+  "batch.symbol": "股票代码",
+  "batch.total_return": "总收益率 [%]",
+  "batch.sharpe": "夏普比率",
+  "batch.max_drawdown": "最大回撤 [%]",
+  "batch.win_rate": "胜率 [%]",
+  "batch.total_trades": "总交易数",
+  "batch.partial_failure": "部分股票回测失败",
+  "batch.click_hint": "点击查看详情",
 } as const;
 
 export default zh;

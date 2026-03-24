@@ -6,7 +6,7 @@ interface Props {
   meta: StrategyMeta;
   onSubmit: (
     strategyParams: Record<string, number>,
-    common: { symbol: string; start_date: string; end_date: string; init_cash: number; fees: number }
+    common: { symbols: string[]; start_date: string; end_date: string; init_cash: number; fees: number }
   ) => void;
   loading: boolean;
 }
@@ -36,8 +36,9 @@ export default function StrategyForm({ meta, onSubmit, loading }: Props) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    const symbolList = [...new Set(symbol.split(",").map(s => s.trim().toUpperCase()).filter(Boolean))];
     onSubmit(strategyParams, {
-      symbol,
+      symbols: symbolList.length > 0 ? symbolList : ["AAPL"],
       start_date: startDate,
       end_date: endDate,
       init_cash: initCash,

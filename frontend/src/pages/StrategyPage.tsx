@@ -5,8 +5,9 @@ import { useI18n } from "../i18n";
 import Chart from "../components/Chart";
 import StatsPanel from "../components/StatsPanel";
 import TradesTable from "../components/TradesTable";
+import BatchSummaryTable from "../components/BatchSummaryTable";
 import StrategyForm from "../components/StrategyForm";
-import { runBacktest } from "../api";
+import { runBacktest, runBatchBacktest } from "../api";
 import type { BacktestResult } from "../types";
 
 export default function StrategyPage() {
@@ -16,6 +17,9 @@ export default function StrategyPage() {
   const meta = STRATEGIES.find((s) => s.id === id);
 
   const [result, setResult] = useState<BacktestResult | null>(null);
+  const [batchResults, setBatchResults] = useState<BacktestResult[]>([]);
+  const [batchErrors, setBatchErrors] = useState<{ symbol: string; error: string }[]>([]);
+  const [selectedSymbol, setSelectedSymbol] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -35,22 +39,53 @@ export default function StrategyPage() {
     );
   }
 
-  const handleSubmit = async (params: Record<string, number>, common: { symbol: string; start_date: string; end_date: string; init_cash: number; fees: number }) => {
+  const handleSubmit = async (params: Record<string, number>, common: { symbols: string[]; start_date: string; end_date: string; init_cash: number; fees: number }) => {
     setLoading(true);
     setError(null);
+    setResult(null);
+    setBatchResults([]);
+    setBatchErrors([]);
+    setSelectedSymbol(null);
+
+    const { symbols, ...rest } = common;
+
     try {
-      const data = await runBacktest({
-        ...common,
-        strategy: meta.id,
-        strategy_params: params,
-      });
-      setResult(data);
+      if (symbols.length === 1) {
+        const data = await runBacktest({
+          symbol: symbols[0],
+          ...rest,
+          strategy: meta.id,
+          strategy_params: params,
+        });
+        setResult(data);
+      } else {
+        const response = await runBatchBacktest({
+          symbols,
+          ...rest,
+          strategy: meta.id,
+          strategy_params: params,
+        });
+        const successes = response.results
+          .filter((r) => r.status === "success" && r.data)
+          .map((r) => r.data!);
+        const errors = response.results
+          .filter((r) => r.status === "error")
+          .map((r) => ({ symbol: r.symbol!, error: r.error! }));
+
+        setBatchResults(successes);
+        setBatchErrors(errors);
+        if (successes.length > 0) {
+          setSelectedSymbol(successes[0].symbol);
+        }
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : t("app.backtest_failed"));
     } finally {
       setLoading(false);
     }
   };
+
+  const selectedResult = batchResults.find((r) => r.symbol === selectedSymbol) ?? null;
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
@@ -81,11 +116,37 @@ export default function StrategyPage() {
         </div>
       )}
 
+      {/* 单只股票结果 */}
       {result && (
         <div className="space-y-5">
           <Chart ohlcv={result.ohlcv} signals={result.signals} indicators={result.indicators} symbol={result.symbol} />
           <TradesTable trades={result.trades} />
           <StatsPanel stats={result.stats} />
+        </div>
+      )}
+
+      {/* 批量回测结果 */}
+      {batchResults.length > 0 && (
+        <div className="space-y-5">
+          {batchErrors.length > 0 && (
+            <div className="rounded-lg bg-red-900/40 px-4 py-3 text-sm text-red-300">
+              {t("batch.partial_failure")}: {batchErrors.map((e) => `${e.symbol} (${e.error})`).join(", ")}
+            </div>
+          )}
+
+          <BatchSummaryTable
+            results={batchResults}
+            selectedSymbol={selectedSymbol}
+            onSelect={setSelectedSymbol}
+          />
+
+          {selectedResult && (
+            <div className="space-y-5">
+              <Chart ohlcv={selectedResult.ohlcv} signals={selectedResult.signals} indicators={selectedResult.indicators} symbol={selectedResult.symbol} />
+              <TradesTable trades={selectedResult.trades} />
+              <StatsPanel stats={selectedResult.stats} />
+            </div>
+          )}
         </div>
       )}
     </div>

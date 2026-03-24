@@ -15,7 +15,7 @@ const en: Record<string, string> = {
   "form.end_date": "End Date",
   "form.init_cash": "Initial Cash",
   "form.fees": "Fees",
-  "form.symbol_hint": "US: AAPL, TSLA | CN: 600519.SS (SH), 000858.SZ (SZ)",
+  "form.symbol_hint": "US: AAPL, TSLA | CN: 600519.SS (SH), 000858.SZ (SZ) | Comma-separated for batch",
   "form.run": "Run Backtest",
   "form.running": "Running...",
 
@@ -106,6 +106,17 @@ const en: Record<string, string> = {
   "param.threshold": "Threshold (%)",
   "param.atr_window": "ATR Period",
   "param.multiplier": "Multiplier",
+
+  // Batch backtest
+  "batch.summary_title": "Batch Comparison",
+  "batch.symbol": "Symbol",
+  "batch.total_return": "Total Return [%]",
+  "batch.sharpe": "Sharpe Ratio",
+  "batch.max_drawdown": "Max Drawdown [%]",
+  "batch.win_rate": "Win Rate [%]",
+  "batch.total_trades": "Total Trades",
+  "batch.partial_failure": "Some symbols failed",
+  "batch.click_hint": "Click a row to view details",
 };
 
 export default en;

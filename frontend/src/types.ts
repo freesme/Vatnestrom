@@ -64,3 +64,27 @@ export interface BacktestResult {
   indicators: Indicator[];
   stats: Record<string, string | number | null>;
 }
+
+/** 批量回测请求参数 */
+export interface BatchBacktestRequest {
+  symbols: string[];
+  start_date: string;
+  end_date: string;
+  init_cash: number;
+  fees: number;
+  strategy: string;
+  strategy_params: Record<string, number>;
+}
+
+/** 批量回测中单个结果项（支持部分失败） */
+export interface BatchResultItem {
+  status: "success" | "error";
+  data?: BacktestResult;
+  symbol?: string;
+  error?: string;
+}
+
+/** 批量回测 API 返回结果 */
+export interface BatchBacktestResponse {
+  results: BatchResultItem[];
+}
