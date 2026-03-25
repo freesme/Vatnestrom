@@ -21,6 +21,7 @@ COPY pyproject.toml ./
 RUN pip install --no-cache-dir \
     "aiofiles>=24.1.0" \
     "fastapi>=0.135.1" \
+    "pandas-ta>=0.4.71b0" \
     "uvicorn>=0.42.0" \
     "vectorbt>=0.26.2" \
     "yfinance>=0.2.18"
