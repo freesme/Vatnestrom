@@ -41,7 +41,7 @@ export default function StrategyPage() {
 
   const [currentInterval, setCurrentInterval] = useState("1d");
 
-  const handleSubmit = async (params: Record<string, number>, common: { symbols: string[]; start_date: string; end_date: string; init_cash: number; fees: number; interval: string }) => {
+  const handleSubmit = async (params: Record<string, number>, common: { symbols: string[]; start_date: string; end_date: string; init_cash: number; fees: number; interval: string; source: string }) => {
     setLoading(true);
     setError(null);
     setResult(null);

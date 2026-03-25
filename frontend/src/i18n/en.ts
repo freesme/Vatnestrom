@@ -123,6 +123,16 @@ const en: Record<string, string> = {
   "batch.partial_failure": "Some symbols failed",
   "batch.click_hint": "Click a row to view details",
 
+  // Data sources
+  "form.source": "Data Source",
+  "source.yahoo": "Yahoo Finance",
+  "source.sina": "Sina Finance",
+  "source.sina_hint": "A-shares only, supports real-time intraday data",
+  "source.twelvedata": "Twelve Data",
+  "source.alphavantage": "Alpha Vantage",
+  "source.twelvedata_hint": "Requires API Key (free 800 calls/day), real-time US stock data",
+  "source.alphavantage_hint": "Requires API Key (free 25 calls/day), 15-min delayed",
+
   // Intervals
   "interval.1m": "1 Minute",
   "interval.3m": "3 Minutes",

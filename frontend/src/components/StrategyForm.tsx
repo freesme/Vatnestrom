@@ -6,7 +6,7 @@ interface Props {
   meta: StrategyMeta;
   onSubmit: (
     strategyParams: Record<string, number>,
-    common: { symbols: string[]; start_date: string; end_date: string; init_cash: number; fees: number; interval: string }
+    common: { symbols: string[]; start_date: string; end_date: string; init_cash: number; fees: number; interval: string; source: string }
   ) => void;
   loading: boolean;
 }
@@ -17,6 +17,7 @@ const inputClass =
 export default function StrategyForm({ meta, onSubmit, loading }: Props) {
   const { t } = useI18n();
   const [symbol, setSymbol] = useState("AAPL");
+  const [source, setSource] = useState("yahoo");
   const [interval, setInterval] = useState("1d");
   const [startDate, setStartDate] = useState("2025-01-01");
   const [endDate, setEndDate] = useState("2025-12-31");
@@ -45,6 +46,7 @@ export default function StrategyForm({ meta, onSubmit, loading }: Props) {
       init_cash: initCash,
       fees,
       interval,
+      source,
     });
   };
 
@@ -63,6 +65,22 @@ export default function StrategyForm({ meta, onSubmit, loading }: Props) {
             <span className="text-xs text-text-secondary">{t("form.symbol")}</span>
             <input className={inputClass} value={symbol} onChange={(e) => setSymbol(e.target.value)} placeholder="AAPL / 600519.SS" />
             <span className="text-[11px] leading-tight text-text-muted">{t("form.symbol_hint")}</span>
+          </label>
+          <label className="space-y-1">
+            <span className="text-xs text-text-secondary">{t("form.source")}</span>
+            <select className={inputClass} value={source} onChange={(e) => setSource(e.target.value)}>
+              {[
+                { value: "yahoo",       labelKey: "source.yahoo" },
+                { value: "sina",        labelKey: "source.sina" },
+                { value: "twelvedata",  labelKey: "source.twelvedata" },
+                { value: "alphavantage", labelKey: "source.alphavantage" },
+              ].map((opt) => (
+                <option key={opt.value} value={opt.value}>{t(opt.labelKey)}</option>
+              ))}
+            </select>
+            {source !== "yahoo" && (
+              <span className="text-[11px] leading-tight text-yellow-400/80">{t(`source.${source}_hint`)}</span>
+            )}
           </label>
           <label className="space-y-1">
             <span className="text-xs text-text-secondary">{t("form.interval")}</span>

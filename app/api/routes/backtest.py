@@ -46,6 +46,7 @@ class BacktestRequest(BaseModel):
     init_cash: float = 100_000.0
     fees: float = 0.001
     interval: str = "1d"
+    source: str = "yahoo"
     strategy: str = "ma_cross"
     strategy_params: dict = {"fast_window": 10, "slow_window": 50}
 
@@ -64,6 +65,7 @@ class BatchBacktestRequest(BaseModel):
     init_cash: float = 100_000.0
     fees: float = 0.001
     interval: str = "1d"
+    source: str = "yahoo"
     strategy: str = "ma_cross"
     strategy_params: dict = {"fast_window": 10, "slow_window": 50}
 
@@ -87,6 +89,7 @@ def backtest_run(req: BacktestRequest):
         init_cash=req.init_cash,
         fees=req.fees,
         interval=req.interval,
+        source=req.source,
         freq=interval_to_freq(req.interval),
         strategy=req.strategy,
         strategy_params=req.strategy_params,
@@ -123,6 +126,7 @@ async def backtest_batch(req: BatchBacktestRequest):
             init_cash=req.init_cash,
             fees=req.fees,
             interval=req.interval,
+            source=req.source,
             freq=interval_to_freq(req.interval),
             strategy=req.strategy,
             strategy_params=req.strategy_params,

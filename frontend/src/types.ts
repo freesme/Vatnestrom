@@ -50,6 +50,7 @@ export interface BacktestRequest {
   init_cash: number;
   fees: number;
   interval: string;
+  source: string;
   strategy: string;
   strategy_params: Record<string, number>;
 }
@@ -74,6 +75,7 @@ export interface BatchBacktestRequest {
   init_cash: number;
   fees: number;
   interval: string;
+  source: string;
   strategy: string;
   strategy_params: Record<string, number>;
 }

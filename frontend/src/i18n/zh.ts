@@ -123,6 +123,16 @@ const zh = {
   "batch.partial_failure": "部分股票回测失败",
   "batch.click_hint": "点击查看详情",
 
+  // 数据源
+  "form.source": "数据源",
+  "source.yahoo": "Yahoo Finance",
+  "source.sina": "新浪财经",
+  "source.sina_hint": "仅支持 A 股（沪深），支持当日实时数据",
+  "source.twelvedata": "Twelve Data",
+  "source.alphavantage": "Alpha Vantage",
+  "source.twelvedata_hint": "需要 API Key（免费 800 次/天），支持美股实时数据",
+  "source.alphavantage_hint": "需要 API Key（免费 25 次/天），15 分钟延迟",
+
   // K线周期
   "interval.1m": "1 分钟",
   "interval.3m": "3 分钟",

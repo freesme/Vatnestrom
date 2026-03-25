@@ -9,6 +9,10 @@
 import logging
 from pathlib import Path
 
+from dotenv import load_dotenv
+
+load_dotenv()
+
 from fastapi import FastAPI
 
 logging.basicConfig(

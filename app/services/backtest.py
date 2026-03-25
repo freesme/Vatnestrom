@@ -48,7 +48,7 @@ def run_backtest(config: BacktestConfig) -> dict:
 
     # 第一步：获取完整的 OHLCV 历史数据
     t0 = time.perf_counter()
-    ohlcv_df = fetch_ohlcv(config.symbol, config.start_date, config.end_date, config.interval)
+    ohlcv_df = fetch_ohlcv(config.symbol, config.start_date, config.end_date, config.interval, source=config.source)
     logger.info("fetch_ohlcv done | %.3fs | rows=%d", time.perf_counter() - t0, len(ohlcv_df))
     # 提取收盘价用于策略信号计算
     price = ohlcv_df["close"]

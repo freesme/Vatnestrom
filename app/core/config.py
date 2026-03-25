@@ -29,6 +29,7 @@ class BacktestConfig:
     fees: float = 0.001
     freq: str = "1D"
     interval: str = "1d"
+    source: str = "yahoo"
     strategy: str = "ma_cross"
     strategy_params: dict = field(default_factory=lambda: {
         "fast_window": 10,   # 快速均线窗口期（天数）
