@@ -24,7 +24,13 @@ RUN pip install --no-cache-dir \
     "pandas-ta>=0.4.71b0" \
     "uvicorn>=0.42.0" \
     "vectorbt>=0.26.2" \
-    "yfinance>=0.2.18"
+    "yfinance>=0.2.18" \
+    "sqlalchemy>=2.0" \
+    "psycopg2-binary>=2.9" \
+    "bcrypt>=4.0" \
+    "python-jose[cryptography]>=3.3" \
+    "email-validator>=2.0" \
+    "python-multipart>=0.0.20"
 
 COPY app/ ./app/
 COPY main.py ./

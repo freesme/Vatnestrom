@@ -24,10 +24,16 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
+from app.api.routes.auth import router as auth_router
 from app.api.routes.backtest import router as backtest_router
+from app.db.database import Base, engine
+from app.db.models import User  # noqa: F401 — 确保模型类被导入，Base.metadata 才包含它们
 
 # 启动时预加载 vectorbt，避免首次请求因 import + numba JIT 编译而缓慢
 import vectorbt as vbt  # noqa: F401
+
+# 启动时自动创建数据库表（如果不存在）
+Base.metadata.create_all(bind=engine)
 
 # 创建 FastAPI 应用实例
 app = FastAPI(title="VectorBT Playground")
@@ -40,7 +46,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# 注册回测路由，所有 /backtest/* 的请求都会被转发到 backtest_router
+# 注册路由
+app.include_router(auth_router)
 app.include_router(backtest_router)
 
 # 生产环境：挂载前端构建产物（npm run build 输出到 static/）
