@@ -125,7 +125,9 @@ const en: Record<string, string> = {
 
   // Data sources
   "form.source": "Data Source",
+  "source.tickflow": "TickFlow",
   "source.yahoo": "Yahoo Finance",
+  "source.yahoo_hint": "US stocks & some A-shares, delayed 15min+, no API Key needed",
   "source.sina": "Sina Finance",
   "source.sina_hint": "A-shares only, supports real-time intraday data",
   "source.twelvedata": "Twelve Data",

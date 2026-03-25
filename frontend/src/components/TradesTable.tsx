@@ -8,6 +8,17 @@ interface Props {
 
 const PAGE_SIZE = 15;
 
+/** 将日期值格式化为可读字符串（Unix 时间戳 → 日期时间，字符串直接返回） */
+function formatDate(value: string | number | null): string {
+  if (value == null) return "-";
+  if (typeof value === "number") {
+    const d = new Date(value * 1000);
+    const pad = (n: number) => String(n).padStart(2, "0");
+    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  }
+  return value;
+}
+
 export default function TradesTable({ trades }: Props) {
   const { t } = useI18n();
   const [page, setPage] = useState(0);
@@ -52,9 +63,9 @@ export default function TradesTable({ trades }: Props) {
                   className={i % 2 === 0 ? "bg-dark-input/50" : ""}
                 >
                   <td className="px-3 py-2 font-mono text-text-muted">{trade.id}</td>
-                  <td className="px-3 py-2 font-mono">{trade.buy_date}</td>
+                  <td className="px-3 py-2 font-mono">{formatDate(trade.buy_date)}</td>
                   <td className="px-3 py-2 text-right font-mono">{trade.buy_price}</td>
-                  <td className="px-3 py-2 font-mono">{trade.sell_date ?? "-"}</td>
+                  <td className="px-3 py-2 font-mono">{formatDate(trade.sell_date)}</td>
                   <td className="px-3 py-2 text-right font-mono">{trade.sell_price ?? "-"}</td>
                   <td className={`px-3 py-2 text-right font-mono ${colorClass}`}>
                     {trade.pnl !== null ? (trade.pnl > 0 ? `+${trade.pnl}` : trade.pnl) : "-"}

@@ -11,7 +11,7 @@ from app.services.datasources import get_datasource
 
 
 def fetch_price(
-    symbol: str, start: str, end: str, interval: str = "1d", source: str = "yahoo"
+    symbol: str, start: str, end: str, interval: str = "1d", source: str = "tickflow"
 ) -> pd.Series:
     """获取收盘价序列
 
@@ -30,7 +30,7 @@ def fetch_price(
 
 
 def fetch_ohlcv(
-    symbol: str, start: str, end: str, interval: str = "1d", source: str = "yahoo"
+    symbol: str, start: str, end: str, interval: str = "1d", source: str = "tickflow"
 ) -> pd.DataFrame:
     """获取完整 OHLCV 数据
 

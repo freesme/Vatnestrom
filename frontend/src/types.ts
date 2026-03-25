@@ -33,9 +33,9 @@ export interface Indicator {
 /** 一笔交易记录（由后端 portfolio 配对生成） */
 export interface Trade {
   id: number;
-  buy_date: string;
+  buy_date: string | number;
   buy_price: number;
-  sell_date: string | null;
+  sell_date: string | number | null;
   sell_price: number | null;
   pnl: number | null;
   pnl_pct: number | null;

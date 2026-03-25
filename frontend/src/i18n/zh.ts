@@ -125,7 +125,9 @@ const zh = {
 
   // 数据源
   "form.source": "数据源",
+  "source.tickflow": "TickFlow",
   "source.yahoo": "Yahoo Finance",
+  "source.yahoo_hint": "美股及部分 A 股，延迟 15 分钟以上，无需 API Key",
   "source.sina": "新浪财经",
   "source.sina_hint": "仅支持 A 股（沪深），支持当日实时数据",
   "source.twelvedata": "Twelve Data",

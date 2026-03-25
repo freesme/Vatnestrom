@@ -70,15 +70,16 @@ export default function StrategyForm({ meta, onSubmit, loading }: Props) {
             <span className="text-xs text-text-secondary">{t("form.source")}</span>
             <select className={inputClass} value={source} onChange={(e) => setSource(e.target.value)}>
               {[
-                { value: "yahoo",       labelKey: "source.yahoo" },
-                { value: "sina",        labelKey: "source.sina" },
-                { value: "twelvedata",  labelKey: "source.twelvedata" },
+                { value: "tickflow",     labelKey: "source.tickflow" },
+                { value: "yahoo",        labelKey: "source.yahoo" },
+                { value: "sina",         labelKey: "source.sina" },
+                { value: "twelvedata",   labelKey: "source.twelvedata" },
                 { value: "alphavantage", labelKey: "source.alphavantage" },
               ].map((opt) => (
                 <option key={opt.value} value={opt.value}>{t(opt.labelKey)}</option>
               ))}
             </select>
-            {source !== "yahoo" && (
+            {source !== "tickflow" && (
               <span className="text-[11px] leading-tight text-yellow-400/80">{t(`source.${source}_hint`)}</span>
             )}
           </label>
