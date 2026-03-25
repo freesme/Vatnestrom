@@ -21,6 +21,7 @@ import vectorbt as vbt
 from app.core.config import BacktestConfig
 from app.services.data import fetch_ohlcv
 from app.strategies import get_strategy
+from app.strategies.utils import format_time, is_intraday, set_intraday_context
 
 logger = logging.getLogger(__name__)
 
@@ -41,12 +42,13 @@ def run_backtest(config: BacktestConfig) -> dict:
         - stats: 回测统计指标（总收益率、夏普比率、最大回撤等）
     """
     t_total = time.perf_counter()
-    logger.info("backtest start | symbol=%s strategy=%s period=%s~%s",
-                config.symbol, config.strategy, config.start_date, config.end_date)
+    intraday = is_intraday(config.interval)
+    logger.info("backtest start | symbol=%s strategy=%s interval=%s period=%s~%s",
+                config.symbol, config.strategy, config.interval, config.start_date, config.end_date)
 
     # 第一步：获取完整的 OHLCV 历史数据
     t0 = time.perf_counter()
-    ohlcv_df = fetch_ohlcv(config.symbol, config.start_date, config.end_date)
+    ohlcv_df = fetch_ohlcv(config.symbol, config.start_date, config.end_date, config.interval)
     logger.info("fetch_ohlcv done | %.3fs | rows=%d", time.perf_counter() - t0, len(ohlcv_df))
     # 提取收盘价用于策略信号计算
     price = ohlcv_df["close"]
@@ -76,21 +78,22 @@ def run_backtest(config: BacktestConfig) -> dict:
 
     # 第五步：从 portfolio 提取实际执行的买卖信号（而非原始策略信号）
     t0 = time.perf_counter()
-    signals = _extract_portfolio_signals(portfolio, price)
+    signals = _extract_portfolio_signals(portfolio, price, intraday)
     logger.info("extract_signals done | %.3fs | count=%d", time.perf_counter() - t0, len(signals))
 
     # 第六步：从 portfolio 提取完整交易记录（配对的买入卖出）
     t0 = time.perf_counter()
-    trades = _extract_trades(portfolio, price)
+    trades = _extract_trades(portfolio, price, intraday)
     logger.info("extract_trades done | %.3fs | count=%d", time.perf_counter() - t0, len(trades))
 
     # 第七步：将 OHLCV 数据转换为前端 lightweight-charts 所需的格式
     t0 = time.perf_counter()
-    ohlcv_list = _format_ohlcv(ohlcv_df)
+    ohlcv_list = _format_ohlcv(ohlcv_df, intraday)
     logger.info("format_ohlcv done | %.3fs", time.perf_counter() - t0)
 
     # 第八步：生成策略对应的技术指标线数据（如均线）
     t0 = time.perf_counter()
+    set_intraday_context(intraday)
     indicators = strategy.generate_indicators(price, config.strategy_params, ohlcv=ohlcv_df)
     logger.info("generate_indicators done | %.3fs", time.perf_counter() - t0)
 
@@ -113,7 +116,7 @@ def run_backtest(config: BacktestConfig) -> dict:
     return result
 
 
-def _format_ohlcv(df: pd.DataFrame) -> list[dict]:
+def _format_ohlcv(df: pd.DataFrame, intraday: bool = False) -> list[dict]:
     """将 OHLCV DataFrame 转换为 lightweight-charts 所需的数据格式
 
     lightweight-charts 要求每条 K 线数据为:
@@ -128,7 +131,7 @@ def _format_ohlcv(df: pd.DataFrame) -> list[dict]:
     records = []
     for date, row in df.iterrows():
         records.append({
-            "time": str(date.date()),
+            "time": format_time(date, intraday),
             "open": round(float(row["open"]), 2),
             "high": round(float(row["high"]), 2),
             "low": round(float(row["low"]), 2),
@@ -138,7 +141,7 @@ def _format_ohlcv(df: pd.DataFrame) -> list[dict]:
     return records
 
 
-def _extract_portfolio_signals(portfolio, price: pd.Series) -> list[dict]:
+def _extract_portfolio_signals(portfolio, price: pd.Series, intraday: bool = False) -> list[dict]:
     """从 portfolio 的 orders 中提取实际执行的买卖信号
 
     只返回 portfolio 真正执行的订单，而非策略产生的原始信号。
@@ -157,7 +160,7 @@ def _extract_portfolio_signals(portfolio, price: pd.Series) -> list[dict]:
     for _, order in orders.iterrows():
         date = pd.Timestamp(order["Timestamp"])
         signals.append({
-            "date": str(date.date()),
+            "date": format_time(date, intraday),
             "action": "buy" if order["Side"] == "Buy" else "sell",
             "price": round(float(order["Price"]), 2),
         })
@@ -166,7 +169,7 @@ def _extract_portfolio_signals(portfolio, price: pd.Series) -> list[dict]:
     return signals
 
 
-def _extract_trades(portfolio, price: pd.Series) -> list[dict]:
+def _extract_trades(portfolio, price: pd.Series, intraday: bool = False) -> list[dict]:
     """从 portfolio 中提取配对的交易记录
 
     返回每笔交易的买入/卖出日期、价格、盈亏等详细信息。
@@ -186,7 +189,7 @@ def _extract_trades(portfolio, price: pd.Series) -> list[dict]:
     trades = portfolio.trades.records_readable
 
     for i, (_, trade) in enumerate(trades.iterrows()):
-        entry_date = str(pd.Timestamp(trade["Entry Timestamp"]).date())
+        entry_date = format_time(pd.Timestamp(trade["Entry Timestamp"]), intraday)
         entry_price = round(float(trade["Avg Entry Price"]), 2)
 
         status_val = trade["Status"]
@@ -204,7 +207,7 @@ def _extract_trades(portfolio, price: pd.Series) -> list[dict]:
                 "status": "open",
             })
         else:
-            exit_date = str(pd.Timestamp(trade["Exit Timestamp"]).date())
+            exit_date = format_time(pd.Timestamp(trade["Exit Timestamp"]), intraday)
             exit_price = round(float(trade["Avg Exit Price"]), 2)
             pnl = round(float(trade["PnL"]), 2)
             ret = float(trade["Return"])

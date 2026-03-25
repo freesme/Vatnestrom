@@ -16,7 +16,7 @@ from concurrent.futures import ThreadPoolExecutor
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 
-from app.core.config import BacktestConfig
+from app.core.config import BacktestConfig, interval_to_freq
 from app.services.backtest import run_backtest
 
 logger = logging.getLogger(__name__)
@@ -45,6 +45,7 @@ class BacktestRequest(BaseModel):
     end_date: str = "2023-12-31"
     init_cash: float = 100_000.0
     fees: float = 0.001
+    interval: str = "1d"
     strategy: str = "ma_cross"
     strategy_params: dict = {"fast_window": 10, "slow_window": 50}
 
@@ -62,6 +63,7 @@ class BatchBacktestRequest(BaseModel):
     end_date: str = "2023-12-31"
     init_cash: float = 100_000.0
     fees: float = 0.001
+    interval: str = "1d"
     strategy: str = "ma_cross"
     strategy_params: dict = {"fast_window": 10, "slow_window": 50}
 
@@ -84,6 +86,8 @@ def backtest_run(req: BacktestRequest):
         end_date=req.end_date,
         init_cash=req.init_cash,
         fees=req.fees,
+        interval=req.interval,
+        freq=interval_to_freq(req.interval),
         strategy=req.strategy,
         strategy_params=req.strategy_params,
     )
@@ -118,6 +122,8 @@ async def backtest_batch(req: BatchBacktestRequest):
             end_date=req.end_date,
             init_cash=req.init_cash,
             fees=req.fees,
+            interval=req.interval,
+            freq=interval_to_freq(req.interval),
             strategy=req.strategy,
             strategy_params=req.strategy_params,
         )

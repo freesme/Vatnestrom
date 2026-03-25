@@ -28,8 +28,21 @@ class BacktestConfig:
     init_cash: float = 10_000.0
     fees: float = 0.001
     freq: str = "1D"
+    interval: str = "1d"
     strategy: str = "ma_cross"
     strategy_params: dict = field(default_factory=lambda: {
         "fast_window": 10,   # 快速均线窗口期（天数）
         "slow_window": 50,   # 慢速均线窗口期（天数）
     })
+
+
+# interval (用户选择的K线周期) → vectorbt freq (用于年化指标计算)
+_INTERVAL_TO_FREQ = {
+    "1m": "1min", "3m": "3min", "5m": "5min", "15m": "15min",
+    "30m": "30min", "1h": "1h", "4h": "4h", "12h": "12h", "1d": "1D",
+}
+
+
+def interval_to_freq(interval: str) -> str:
+    """将用户选择的 interval 转换为 vectorbt Portfolio 所需的 freq 字符串"""
+    return _INTERVAL_TO_FREQ.get(interval, "1D")

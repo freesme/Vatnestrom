@@ -16,6 +16,7 @@ interface Props {
   signals: Signal[];
   indicators: Indicator[];
   symbol: string;
+  interval?: string;
 }
 
 const CHART_THEME = {
@@ -64,7 +65,7 @@ function makeChartOptions(width: number, height: number) {
     },
     crosshair: { mode: 0 as const },
     timeScale: {
-      timeVisible: false,
+      timeVisible: true,
       borderColor: CHART_THEME.border,
       minBarSpacing: 1,
       fixLeftEdge: true,
@@ -104,7 +105,7 @@ function syncTimeScales(main: IChartApi, sub: IChartApi) {
   };
 }
 
-export default function Chart({ ohlcv, signals, indicators, symbol }: Props) {
+export default function Chart({ ohlcv, signals, indicators, symbol, interval = "1d" }: Props) {
   const { t } = useI18n();
   const mainRef = useRef<HTMLDivElement>(null);
   const subRef = useRef<HTMLDivElement>(null);
@@ -241,7 +242,7 @@ export default function Chart({ ohlcv, signals, indicators, symbol }: Props) {
       subChart?.remove();
       mainChart.remove();
     };
-  }, [ohlcv, signals, indicators, symbol, t, overlayIndicators, panelIndicators, hasSubPanel]);
+  }, [ohlcv, signals, indicators, symbol, interval, t, overlayIndicators, panelIndicators, hasSubPanel]);
 
   return (
     <div className="overflow-hidden rounded-xl border border-dark-border">

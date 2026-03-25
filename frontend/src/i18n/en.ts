@@ -16,6 +16,7 @@ const en: Record<string, string> = {
   "form.init_cash": "Initial Cash",
   "form.fees": "Fees",
   "form.symbol_hint": "US: AAPL, TSLA | CN: 600519.SS (SH), 000858.SZ (SZ) | Comma-separated for batch",
+  "form.interval": "Interval",
   "form.run": "Run Backtest",
   "form.running": "Running...",
 
@@ -121,6 +122,18 @@ const en: Record<string, string> = {
   "batch.total_trades": "Total Trades",
   "batch.partial_failure": "Some symbols failed",
   "batch.click_hint": "Click a row to view details",
+
+  // Intervals
+  "interval.1m": "1 Minute",
+  "interval.3m": "3 Minutes",
+  "interval.5m": "5 Minutes",
+  "interval.15m": "15 Minutes",
+  "interval.30m": "30 Minutes",
+  "interval.1h": "1 Hour",
+  "interval.4h": "4 Hours",
+  "interval.12h": "12 Hours",
+  "interval.1d": "Daily",
+  "interval.hint": "Intraday data limited to recent periods (1m: 7 days, others: 60 days)",
 };
 
 export default en;

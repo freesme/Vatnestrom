@@ -39,13 +39,16 @@ export default function StrategyPage() {
     );
   }
 
-  const handleSubmit = async (params: Record<string, number>, common: { symbols: string[]; start_date: string; end_date: string; init_cash: number; fees: number }) => {
+  const [currentInterval, setCurrentInterval] = useState("1d");
+
+  const handleSubmit = async (params: Record<string, number>, common: { symbols: string[]; start_date: string; end_date: string; init_cash: number; fees: number; interval: string }) => {
     setLoading(true);
     setError(null);
     setResult(null);
     setBatchResults([]);
     setBatchErrors([]);
     setSelectedSymbol(null);
+    setCurrentInterval(common.interval);
 
     const { symbols, ...rest } = common;
 
@@ -119,7 +122,7 @@ export default function StrategyPage() {
       {/* 单只股票结果 */}
       {result && (
         <div className="space-y-5">
-          <Chart ohlcv={result.ohlcv} signals={result.signals} indicators={result.indicators} symbol={result.symbol} />
+          <Chart ohlcv={result.ohlcv} signals={result.signals} indicators={result.indicators} symbol={result.symbol} interval={currentInterval} />
           <TradesTable trades={result.trades} />
           <StatsPanel stats={result.stats} />
         </div>
@@ -142,7 +145,7 @@ export default function StrategyPage() {
 
           {selectedResult && (
             <div className="space-y-5">
-              <Chart ohlcv={selectedResult.ohlcv} signals={selectedResult.signals} indicators={selectedResult.indicators} symbol={selectedResult.symbol} />
+              <Chart ohlcv={selectedResult.ohlcv} signals={selectedResult.signals} indicators={selectedResult.indicators} symbol={selectedResult.symbol} interval={currentInterval} />
               <TradesTable trades={selectedResult.trades} />
               <StatsPanel stats={selectedResult.stats} />
             </div>

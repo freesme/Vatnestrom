@@ -16,6 +16,7 @@ const zh = {
   "form.init_cash": "初始资金",
   "form.fees": "手续费",
   "form.symbol_hint": "美股: AAPL, TSLA | A股: 600519.SS(沪), 000858.SZ(深) | 逗号分隔可批量回测",
+  "form.interval": "K线周期",
   "form.run": "执行回测",
   "form.running": "回测中...",
 
@@ -121,6 +122,18 @@ const zh = {
   "batch.total_trades": "总交易数",
   "batch.partial_failure": "部分股票回测失败",
   "batch.click_hint": "点击查看详情",
+
+  // K线周期
+  "interval.1m": "1 分钟",
+  "interval.3m": "3 分钟",
+  "interval.5m": "5 分钟",
+  "interval.15m": "15 分钟",
+  "interval.30m": "30 分钟",
+  "interval.1h": "1 小时",
+  "interval.4h": "4 小时",
+  "interval.12h": "12 小时",
+  "interval.1d": "日线",
+  "interval.hint": "分钟线仅支持近期数据（1分钟≤7天，其他≤60天）",
 } as const;
 
 export default zh;

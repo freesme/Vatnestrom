@@ -1,6 +1,6 @@
 /** 单根 K 线数据，对应 lightweight-charts 的 CandlestickData */
 export interface OhlcvItem {
-  time: string;
+  time: string | number;
   open: number;
   high: number;
   low: number;
@@ -10,14 +10,14 @@ export interface OhlcvItem {
 
 /** 买卖信号点位 */
 export interface Signal {
-  date: string;
+  date: string | number;
   action: "buy" | "sell";
   price: number;
 }
 
 /** 技术指标线的单个数据点 */
 export interface IndicatorPoint {
-  time: string;
+  time: string | number;
   value: number;
 }
 
@@ -49,6 +49,7 @@ export interface BacktestRequest {
   end_date: string;
   init_cash: number;
   fees: number;
+  interval: string;
   strategy: string;
   strategy_params: Record<string, number>;
 }
@@ -72,6 +73,7 @@ export interface BatchBacktestRequest {
   end_date: string;
   init_cash: number;
   fees: number;
+  interval: string;
   strategy: string;
   strategy_params: Record<string, number>;
 }

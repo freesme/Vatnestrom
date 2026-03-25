@@ -6,7 +6,7 @@ interface Props {
   meta: StrategyMeta;
   onSubmit: (
     strategyParams: Record<string, number>,
-    common: { symbols: string[]; start_date: string; end_date: string; init_cash: number; fees: number }
+    common: { symbols: string[]; start_date: string; end_date: string; init_cash: number; fees: number; interval: string }
   ) => void;
   loading: boolean;
 }
@@ -17,6 +17,7 @@ const inputClass =
 export default function StrategyForm({ meta, onSubmit, loading }: Props) {
   const { t } = useI18n();
   const [symbol, setSymbol] = useState("AAPL");
+  const [interval, setInterval] = useState("1d");
   const [startDate, setStartDate] = useState("2025-01-01");
   const [endDate, setEndDate] = useState("2025-12-31");
   const [initCash, setInitCash] = useState(10000);
@@ -43,6 +44,7 @@ export default function StrategyForm({ meta, onSubmit, loading }: Props) {
       end_date: endDate,
       init_cash: initCash,
       fees,
+      interval,
     });
   };
 
@@ -56,11 +58,32 @@ export default function StrategyForm({ meta, onSubmit, loading }: Props) {
         <legend className="mb-3 text-xs font-medium tracking-wider text-text-muted uppercase">
           {t("form.basic_params")}
         </legend>
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
           <label className="space-y-1 col-span-2 sm:col-span-1">
             <span className="text-xs text-text-secondary">{t("form.symbol")}</span>
             <input className={inputClass} value={symbol} onChange={(e) => setSymbol(e.target.value)} placeholder="AAPL / 600519.SS" />
             <span className="text-[11px] leading-tight text-text-muted">{t("form.symbol_hint")}</span>
+          </label>
+          <label className="space-y-1">
+            <span className="text-xs text-text-secondary">{t("form.interval")}</span>
+            <select className={inputClass} value={interval} onChange={(e) => setInterval(e.target.value)}>
+              {[
+                { value: "1m",  labelKey: "interval.1m" },
+                { value: "3m",  labelKey: "interval.3m" },
+                { value: "5m",  labelKey: "interval.5m" },
+                { value: "15m", labelKey: "interval.15m" },
+                { value: "30m", labelKey: "interval.30m" },
+                { value: "1h",  labelKey: "interval.1h" },
+                { value: "4h",  labelKey: "interval.4h" },
+                { value: "12h", labelKey: "interval.12h" },
+                { value: "1d",  labelKey: "interval.1d" },
+              ].map((opt) => (
+                <option key={opt.value} value={opt.value}>{t(opt.labelKey)}</option>
+              ))}
+            </select>
+            {interval !== "1d" && (
+              <span className="text-[11px] leading-tight text-yellow-400/80">{t("interval.hint")}</span>
+            )}
           </label>
           <label className="space-y-1">
             <span className="text-xs text-text-secondary">{t("form.start_date")}</span>
