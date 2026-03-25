@@ -2,3 +2,4 @@
 /.idea/
 /uv.lock
 /static/
+.env
