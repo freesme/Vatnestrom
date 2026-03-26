@@ -59,17 +59,26 @@ def run_backtest(config: BacktestConfig) -> dict:
     entries, exits = strategy.generate_signals(price, config.strategy_params, ohlcv=ohlcv_df)
     logger.info("generate_signals done | %.3fs", time.perf_counter() - t0)
 
+    # 第二步半：计算止盈止损百分比（始终计算，用于信号标注）
+    t0 = time.perf_counter()
+    tp_pct, sl_pct = strategy.generate_tp_sl(price, config.strategy_params, ohlcv=ohlcv_df)
+    logger.info("generate_tp_sl done | %.3fs", time.perf_counter() - t0)
+
     # 第三步：使用 vectorbt 构建投资组合，模拟交易过程
     t0 = time.perf_counter()
-    portfolio = vbt.Portfolio.from_signals(
-        close=price,          # 收盘价序列
-        entries=entries,      # 买入信号
-        exits=exits,          # 卖出信号
-        init_cash=config.init_cash,  # 初始资金
-        fees=config.fees,     # 手续费比例
-        freq=config.freq,     # 数据频率
+    pf_kwargs = dict(
+        close=price,
+        entries=entries,
+        exits=exits,
+        init_cash=config.init_cash,
+        fees=config.fees,
+        freq=config.freq,
     )
-    logger.info("portfolio.from_signals done | %.3fs", time.perf_counter() - t0)
+    if config.enable_tp_sl:
+        pf_kwargs["tp_stop"] = tp_pct
+        pf_kwargs["sl_stop"] = sl_pct
+    portfolio = vbt.Portfolio.from_signals(**pf_kwargs)
+    logger.info("portfolio.from_signals done | %.3fs | tp_sl=%s", time.perf_counter() - t0, config.enable_tp_sl)
 
     # 第四步：获取回测统计指标（收益率、夏普比率、最大回撤等）
     t0 = time.perf_counter()
@@ -78,12 +87,12 @@ def run_backtest(config: BacktestConfig) -> dict:
 
     # 第五步：从 portfolio 提取实际执行的买卖信号（而非原始策略信号）
     t0 = time.perf_counter()
-    signals = _extract_portfolio_signals(portfolio, price, intraday)
+    signals = _extract_portfolio_signals(portfolio, price, intraday, tp_pct=tp_pct, sl_pct=sl_pct)
     logger.info("extract_signals done | %.3fs | count=%d", time.perf_counter() - t0, len(signals))
 
     # 第六步：从 portfolio 提取完整交易记录（配对的买入卖出）
     t0 = time.perf_counter()
-    trades = _extract_trades(portfolio, price, intraday)
+    trades = _extract_trades(portfolio, price, intraday, tp_pct=tp_pct, sl_pct=sl_pct)
     logger.info("extract_trades done | %.3fs | count=%d", time.perf_counter() - t0, len(trades))
 
     # 第七步：将 OHLCV 数据转换为前端 lightweight-charts 所需的格式
@@ -141,17 +150,22 @@ def _format_ohlcv(df: pd.DataFrame, intraday: bool = False) -> list[dict]:
     return records
 
 
-def _extract_portfolio_signals(portfolio, price: pd.Series, intraday: bool = False) -> list[dict]:
+def _extract_portfolio_signals(
+    portfolio, price: pd.Series, intraday: bool = False,
+    tp_pct: pd.Series | None = None, sl_pct: pd.Series | None = None,
+) -> list[dict]:
     """从 portfolio 的 orders 中提取实际执行的买卖信号
 
     只返回 portfolio 真正执行的订单，而非策略产生的原始信号。
     这确保图表标记与实际交易记录完全一致。
 
+    对买入信号附加 tp_price / sl_price，方便前端图表显示止盈止损位。
+
     Returns:
         按日期排序的信号列表，例如:
         [
-            {"date": "2025-11-10", "action": "buy",  "price": 150.25},
-            {"date": "2025-12-05", "action": "sell", "price": 162.30},
+            {"date": "2025-11-10", "action": "buy",  "price": 150.25, "tp_price": 157.76, "sl_price": 145.74},
+            {"date": "2025-12-05", "action": "sell", "price": 162.30, "tp_price": null, "sl_price": null},
         ]
     """
     signals = []
@@ -159,38 +173,65 @@ def _extract_portfolio_signals(portfolio, price: pd.Series, intraday: bool = Fal
 
     for _, order in orders.iterrows():
         date = pd.Timestamp(order["Timestamp"])
-        signals.append({
+        buy = order["Side"] == "Buy"
+        buy_price = round(float(order["Price"]), 2)
+
+        signal = {
             "date": format_time(date, intraday),
-            "action": "buy" if order["Side"] == "Buy" else "sell",
-            "price": round(float(order["Price"]), 2),
-        })
+            "action": "buy" if buy else "sell",
+            "price": buy_price,
+            "tp_price": None,
+            "sl_price": None,
+        }
+
+        if buy and tp_pct is not None and sl_pct is not None:
+            try:
+                tp_val = float(tp_pct.loc[date])
+                sl_val = float(sl_pct.loc[date])
+                signal["tp_price"] = round(buy_price * (1 + tp_val), 2)
+                signal["sl_price"] = round(buy_price * (1 - sl_val), 2)
+            except (KeyError, TypeError):
+                pass
+
+        signals.append(signal)
 
     signals.sort(key=lambda x: x["date"])
     return signals
 
 
-def _extract_trades(portfolio, price: pd.Series, intraday: bool = False) -> list[dict]:
+def _extract_trades(
+    portfolio, price: pd.Series, intraday: bool = False,
+    tp_pct: pd.Series | None = None, sl_pct: pd.Series | None = None,
+) -> list[dict]:
     """从 portfolio 中提取配对的交易记录
 
-    返回每笔交易的买入/卖出日期、价格、盈亏等详细信息。
+    返回每笔交易的买入/卖出日期、价格、盈亏、止盈止损价位及卖出类型。
 
-    Returns:
-        交易记录列表，例如:
-        [
-            {
-                "id": 1,
-                "buy_date": "2025-01-10", "buy_price": 150.25,
-                "sell_date": "2025-02-05", "sell_price": 162.30,
-                "pnl": 12.05, "pnl_pct": 8.02, "status": "win"
-            },
-        ]
+    卖出类型 exit_type:
+      - "signal": 策略指标信号触发卖出
+      - "tp": 触及止盈价位卖出
+      - "sl": 触及止损价位卖出
+      - null: 未平仓
     """
     trades_list = []
     trades = portfolio.trades.records_readable
 
     for i, (_, trade) in enumerate(trades.iterrows()):
-        entry_date = format_time(pd.Timestamp(trade["Entry Timestamp"]), intraday)
+        entry_ts = pd.Timestamp(trade["Entry Timestamp"])
+        entry_date = format_time(entry_ts, intraday)
         entry_price = round(float(trade["Avg Entry Price"]), 2)
+
+        # 计算该笔交易的止盈止损价位
+        tp_price_val = None
+        sl_price_val = None
+        if tp_pct is not None and sl_pct is not None:
+            try:
+                tp_val = float(tp_pct.loc[entry_ts])
+                sl_val = float(sl_pct.loc[entry_ts])
+                tp_price_val = round(entry_price * (1 + tp_val), 2)
+                sl_price_val = round(entry_price * (1 - sl_val), 2)
+            except (KeyError, TypeError):
+                pass
 
         status_val = trade["Status"]
         is_open = str(status_val) == "Open"
@@ -200,11 +241,14 @@ def _extract_trades(portfolio, price: pd.Series, intraday: bool = False) -> list
                 "id": i + 1,
                 "buy_date": entry_date,
                 "buy_price": entry_price,
+                "tp_price": tp_price_val,
+                "sl_price": sl_price_val,
                 "sell_date": None,
                 "sell_price": None,
                 "pnl": None,
                 "pnl_pct": None,
                 "status": "open",
+                "exit_type": None,
             })
         else:
             exit_date = format_time(pd.Timestamp(trade["Exit Timestamp"]), intraday)
@@ -220,15 +264,26 @@ def _extract_trades(portfolio, price: pd.Series, intraday: bool = False) -> list
             else:
                 status = "flat"
 
+            # 推断卖出类型：比较卖出价与 TP/SL 价位
+            exit_type = "signal"
+            if tp_price_val is not None and sl_price_val is not None:
+                if exit_price >= tp_price_val:
+                    exit_type = "tp"
+                elif exit_price <= sl_price_val:
+                    exit_type = "sl"
+
             trades_list.append({
                 "id": i + 1,
                 "buy_date": entry_date,
                 "buy_price": entry_price,
+                "tp_price": tp_price_val,
+                "sl_price": sl_price_val,
                 "sell_date": exit_date,
                 "sell_price": exit_price,
                 "pnl": pnl,
                 "pnl_pct": pnl_pct,
                 "status": status,
+                "exit_type": exit_type,
             })
 
     return trades_list

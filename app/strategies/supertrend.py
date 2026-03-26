@@ -68,3 +68,18 @@ class SuperTrendStrategy(BaseStrategy):
                 "overlay": True,
             },
         ]
+
+    def generate_tp_sl(
+        self, price: pd.Series, params: dict, ohlcv: pd.DataFrame | None = None
+    ) -> tuple[pd.Series, pd.Series]:
+        length = int(params.get("st_length", 10))
+        multiplier = float(params.get("st_multiplier", 3.0))
+
+        high = ohlcv["high"] if ohlcv is not None else price
+        low = ohlcv["low"] if ohlcv is not None else price
+
+        atr = pandas_ta.atr(high, low, price, length=length)
+
+        tp_pct = (multiplier * atr / price).clip(0.001, 0.5)
+        sl_pct = (multiplier * atr / price).clip(0.001, 0.5)
+        return tp_pct, sl_pct

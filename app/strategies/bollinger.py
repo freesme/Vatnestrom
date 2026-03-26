@@ -59,3 +59,19 @@ class BollingerStrategy(BaseStrategy):
                 "overlay": True,
             },
         ]
+
+    def generate_tp_sl(
+        self, price: pd.Series, params: dict, ohlcv: pd.DataFrame | None = None
+    ) -> tuple[pd.Series, pd.Series]:
+        bb_window = params.get("bb_window", 20)
+        bb_std = params.get("bb_std", 2.0)
+
+        bb = vbt.BBANDS.run(price, window=bb_window, ewm=False, alpha=bb_std)
+
+        # 买入发生在价格下穿下轨时，此时 price ≈ lower，
+        # 所以用上下轨全宽作为止盈目标（从下轨回到上轨），
+        # 止损用半宽防止继续下跌。
+        band_width = (bb.upper - bb.lower) / price
+        tp_pct = band_width.clip(0.001, 0.5)
+        sl_pct = (band_width / 2).clip(0.001, 0.5)
+        return tp_pct, sl_pct

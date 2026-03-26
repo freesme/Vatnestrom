@@ -7,6 +7,7 @@ import {
   createSeriesMarkers,
   type IChartApi,
   type LogicalRange,
+  type Time,
 } from "lightweight-charts";
 import type { OhlcvItem, Signal, Indicator } from "../types";
 import { useI18n } from "../i18n";
@@ -148,7 +149,7 @@ export default function Chart({ ohlcv, signals, indicators, symbol, interval = "
       wickDownColor: "#ef4444",
       priceFormat,
     });
-    candleSeries.setData(ohlcv);
+    candleSeries.setData(ohlcv.map((d) => ({ ...d, time: d.time as Time })));
 
     for (const indicator of overlayIndicators) {
       const lineSeries = mainChart.addSeries(LineSeries, {
@@ -159,7 +160,7 @@ export default function Chart({ ohlcv, signals, indicators, symbol, interval = "
         lastValueVisible: false,
         priceFormat,
       });
-      lineSeries.setData(indicator.data);
+      lineSeries.setData(indicator.data.map((d) => ({ ...d, time: d.time as Time })));
     }
 
     // 成交量
@@ -172,7 +173,7 @@ export default function Chart({ ohlcv, signals, indicators, symbol, interval = "
     });
     volumeSeries.setData(
       ohlcv.map((item) => ({
-        time: item.time,
+        time: item.time as Time,
         value: item.volume,
         color: item.close >= item.open ? "rgba(34,197,94,0.25)" : "rgba(239,68,68,0.25)",
       }))
@@ -180,7 +181,7 @@ export default function Chart({ ohlcv, signals, indicators, symbol, interval = "
 
     // 买卖标记
     const markers = signals.map((s) => ({
-      time: s.date,
+      time: s.date as Time,
       position: s.action === "buy" ? ("belowBar" as const) : ("aboveBar" as const),
       color: s.action === "buy" ? "#22c55e" : "#ef4444",
       shape: s.action === "buy" ? ("arrowUp" as const) : ("arrowDown" as const),
@@ -217,7 +218,7 @@ export default function Chart({ ohlcv, signals, indicators, symbol, interval = "
           priceLineVisible: false,
           lastValueVisible: false,
         });
-        lineSeries.setData(indicator.data);
+        lineSeries.setData(indicator.data.map((d) => ({ ...d, time: d.time as Time })));
       }
 
       subChart.timeScale().fitContent();

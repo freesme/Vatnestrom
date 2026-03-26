@@ -13,6 +13,8 @@ export interface Signal {
   date: string | number;
   action: "buy" | "sell";
   price: number;
+  tp_price?: number | null;
+  sl_price?: number | null;
 }
 
 /** 技术指标线的单个数据点 */
@@ -35,11 +37,14 @@ export interface Trade {
   id: number;
   buy_date: string | number;
   buy_price: number;
+  tp_price: number | null;
+  sl_price: number | null;
   sell_date: string | number | null;
   sell_price: number | null;
   pnl: number | null;
   pnl_pct: number | null;
   status: "win" | "loss" | "flat" | "open";
+  exit_type: "signal" | "tp" | "sl" | null;
 }
 
 /** 回测请求参数 */
@@ -53,6 +58,7 @@ export interface BacktestRequest {
   source: string;
   strategy: string;
   strategy_params: Record<string, number>;
+  enable_tp_sl: boolean;
 }
 
 /** 回测 API 返回结果 */
@@ -78,6 +84,7 @@ export interface BatchBacktestRequest {
   source: string;
   strategy: string;
   strategy_params: Record<string, number>;
+  enable_tp_sl: boolean;
 }
 
 /** 批量回测中单个结果项（支持部分失败） */

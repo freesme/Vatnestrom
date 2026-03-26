@@ -19,10 +19,13 @@ const en: Record<string, string> = {
   "form.interval": "Interval",
   "form.run": "Run Backtest",
   "form.running": "Running...",
+  "form.enable_tp_sl": "Enable TP/SL (Take Profit / Stop Loss)",
 
   // Chart
   "chart.buy": "Buy",
   "chart.sell": "Sell",
+  "chart.tp": "TP",
+  "chart.sl": "SL",
 
   // Stats panel
   "stats.title": "Backtest Statistics",
@@ -69,6 +72,12 @@ const en: Record<string, string> = {
   "trades.loss": "Loss",
   "trades.flat": "Flat",
   "trades.open": "Open",
+  "trades.tp_price": "TP Price",
+  "trades.sl_price": "SL Price",
+  "trades.exit_type": "Exit Type",
+  "trades.exit_tp": "TP",
+  "trades.exit_sl": "SL",
+  "trades.exit_signal": "Signal",
 
   // Strategy names
   "strategy.ma_cross.name": "MA Crossover",

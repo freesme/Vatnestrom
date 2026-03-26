@@ -6,7 +6,7 @@ interface Props {
   meta: StrategyMeta;
   onSubmit: (
     strategyParams: Record<string, number>,
-    common: { symbols: string[]; start_date: string; end_date: string; init_cash: number; fees: number; interval: string; source: string }
+    common: { symbols: string[]; start_date: string; end_date: string; init_cash: number; fees: number; interval: string; source: string; enable_tp_sl: boolean }
   ) => void;
   loading: boolean;
 }
@@ -23,6 +23,7 @@ export default function StrategyForm({ meta, onSubmit, loading }: Props) {
   const [endDate, setEndDate] = useState("2025-12-31");
   const [initCash, setInitCash] = useState(10000);
   const [fees, setFees] = useState(0.001);
+  const [enableTpSl, setEnableTpSl] = useState(false);
 
   const [strategyParams, setStrategyParams] = useState<Record<string, number>>(() => {
     const defaults: Record<string, number> = {};
@@ -47,6 +48,7 @@ export default function StrategyForm({ meta, onSubmit, loading }: Props) {
       fees,
       interval,
       source,
+      enable_tp_sl: enableTpSl,
     });
   };
 
@@ -143,6 +145,17 @@ export default function StrategyForm({ meta, onSubmit, loading }: Props) {
           ))}
         </div>
       </fieldset>
+
+      {/* 止盈止损开关 */}
+      <label className="flex items-center gap-2 cursor-pointer select-none">
+        <input
+          type="checkbox"
+          checked={enableTpSl}
+          onChange={(e) => setEnableTpSl(e.target.checked)}
+          className="h-4 w-4 rounded border-dark-border bg-dark-input accent-accent"
+        />
+        <span className="text-sm text-text-secondary">{t("form.enable_tp_sl")}</span>
+      </label>
 
       <button
         type="submit"

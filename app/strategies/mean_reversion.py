@@ -63,3 +63,12 @@ class MeanReversionStrategy(BaseStrategy):
                 "overlay": True,
             },
         ]
+
+    def generate_tp_sl(
+        self, price: pd.Series, params: dict, ohlcv: pd.DataFrame | None = None
+    ) -> tuple[pd.Series, pd.Series]:
+        threshold = params.get("threshold", 5.0) / 100.0
+
+        tp_pct = pd.Series(threshold, index=price.index).clip(0.001, 0.5)
+        sl_pct = pd.Series(threshold, index=price.index).clip(0.001, 0.5)
+        return tp_pct, sl_pct

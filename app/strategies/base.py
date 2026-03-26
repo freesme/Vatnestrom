@@ -59,3 +59,25 @@ class BaseStrategy(ABC):
             }
         """
         return []
+
+    def generate_tp_sl(
+        self, price: pd.Series, params: dict, ohlcv: pd.DataFrame | None = None
+    ) -> tuple[pd.Series, pd.Series]:
+        """根据当前指标计算止盈和止损百分比
+
+        默认返回固定百分比（止盈 5%、止损 3%）。子类可覆写此方法，
+        基于各自的技术指标动态计算每根 K 线对应的止盈止损比例。
+
+        Args:
+            price: 收盘价时间序列
+            params: 策略参数字典
+            ohlcv: 完整的 OHLCV DataFrame（可选）
+
+        Returns:
+            一个元组 (tp_pct, sl_pct)：
+            - tp_pct: 止盈百分比 Series，值域 [0.001, 0.5]，如 0.05 表示 5%
+            - sl_pct: 止损百分比 Series，值域 [0.001, 0.5]，如 0.03 表示 3%
+        """
+        tp_pct = pd.Series(0.05, index=price.index)
+        sl_pct = pd.Series(0.03, index=price.index)
+        return tp_pct, sl_pct

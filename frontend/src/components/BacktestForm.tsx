@@ -24,8 +24,11 @@ export default function BacktestForm({ onSubmit, loading }: Props) {
       end_date: endDate,
       init_cash: initCash,
       fees,
+      interval: "1d",
+      source: "yahoo",
       strategy: "ma_cross",
       strategy_params: { fast_window: fastWindow, slow_window: slowWindow },
+      enable_tp_sl: false,
     });
   };
 

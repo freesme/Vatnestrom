@@ -54,3 +54,20 @@ class DonchianStrategy(BaseStrategy):
                 "overlay": True,
             },
         ]
+
+    def generate_tp_sl(
+        self, price: pd.Series, params: dict, ohlcv: pd.DataFrame | None = None
+    ) -> tuple[pd.Series, pd.Series]:
+        entry_window = params.get("entry_window", 20)
+        exit_window = params.get("exit_window", 10)
+
+        # 使用前一根 bar 的通道（与 generate_signals 中 shift(1) 一致），
+        # 避免突破 bar 上 upper 包含当前价格导致 upper - price ≈ 0。
+        upper_prev = price.rolling(entry_window).max().shift(1)
+        lower_prev = price.rolling(exit_window).min().shift(1)
+
+        # 止盈 = 通道全宽，止损 = 入场价到通道下轨的距离
+        channel_width = (upper_prev - lower_prev) / price
+        tp_pct = channel_width.clip(0.001, 0.5)
+        sl_pct = ((price - lower_prev) / price).clip(0.001, 0.5)
+        return tp_pct, sl_pct

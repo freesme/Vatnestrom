@@ -44,10 +44,13 @@ export default function TradesTable({ trades }: Props) {
               <th className="px-3 py-2 font-medium">#</th>
               <th className="px-3 py-2 font-medium">{t("trades.buy_date")}</th>
               <th className="px-3 py-2 font-medium text-right">{t("trades.buy_price")}</th>
+              <th className="px-3 py-2 font-medium text-right">{t("trades.tp_price")}</th>
+              <th className="px-3 py-2 font-medium text-right">{t("trades.sl_price")}</th>
               <th className="px-3 py-2 font-medium">{t("trades.sell_date")}</th>
               <th className="px-3 py-2 font-medium text-right">{t("trades.sell_price")}</th>
               <th className="px-3 py-2 font-medium text-right">{t("trades.pnl")}</th>
               <th className="px-3 py-2 font-medium text-right">{t("trades.pnl_pct")}</th>
+              <th className="px-3 py-2 font-medium text-center">{t("trades.exit_type")}</th>
               <th className="px-3 py-2 font-medium text-center">{t("trades.status")}</th>
             </tr>
           </thead>
@@ -65,6 +68,8 @@ export default function TradesTable({ trades }: Props) {
                   <td className="px-3 py-2 font-mono text-text-muted">{trade.id}</td>
                   <td className="px-3 py-2 font-mono">{formatDate(trade.buy_date)}</td>
                   <td className="px-3 py-2 text-right font-mono">{trade.buy_price}</td>
+                  <td className="px-3 py-2 text-right font-mono text-green-400/70">{trade.tp_price ?? "-"}</td>
+                  <td className="px-3 py-2 text-right font-mono text-red-400/70">{trade.sl_price ?? "-"}</td>
                   <td className="px-3 py-2 font-mono">{formatDate(trade.sell_date)}</td>
                   <td className="px-3 py-2 text-right font-mono">{trade.sell_price ?? "-"}</td>
                   <td className={`px-3 py-2 text-right font-mono ${colorClass}`}>
@@ -72,6 +77,23 @@ export default function TradesTable({ trades }: Props) {
                   </td>
                   <td className={`px-3 py-2 text-right font-mono ${colorClass}`}>
                     {trade.pnl_pct !== null ? `${trade.pnl_pct > 0 ? "+" : ""}${trade.pnl_pct}%` : "-"}
+                  </td>
+                  <td className="px-3 py-2 text-center">
+                    {trade.exit_type === "tp" ? (
+                      <span className="inline-block rounded-full bg-green-900/40 px-2 py-0.5 text-xs text-green-300">
+                        {t("trades.exit_tp")}
+                      </span>
+                    ) : trade.exit_type === "sl" ? (
+                      <span className="inline-block rounded-full bg-red-900/40 px-2 py-0.5 text-xs text-red-300">
+                        {t("trades.exit_sl")}
+                      </span>
+                    ) : trade.exit_type === "signal" ? (
+                      <span className="inline-block rounded-full bg-blue-900/40 px-2 py-0.5 text-xs text-blue-300">
+                        {t("trades.exit_signal")}
+                      </span>
+                    ) : (
+                      <span className="text-text-muted">-</span>
+                    )}
                   </td>
                   <td className="px-3 py-2 text-center">
                     {isOpen ? (

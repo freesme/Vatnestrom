@@ -35,6 +35,7 @@ class BacktestConfig:
         "fast_window": 10,   # 快速均线窗口期（天数）
         "slow_window": 50,   # 慢速均线窗口期（天数）
     })
+    enable_tp_sl: bool = False
 
 
 # interval (用户选择的K线周期) → vectorbt freq (用于年化指标计算)

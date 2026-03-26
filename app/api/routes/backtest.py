@@ -49,6 +49,7 @@ class BacktestRequest(BaseModel):
     source: str = "yahoo"
     strategy: str = "ma_cross"
     strategy_params: dict = {"fast_window": 10, "slow_window": 50}
+    enable_tp_sl: bool = False
 
 
 class BatchBacktestRequest(BaseModel):
@@ -68,6 +69,7 @@ class BatchBacktestRequest(BaseModel):
     source: str = "yahoo"
     strategy: str = "ma_cross"
     strategy_params: dict = {"fast_window": 10, "slow_window": 50}
+    enable_tp_sl: bool = False
 
 
 _executor = ThreadPoolExecutor(max_workers=8)
@@ -93,6 +95,7 @@ def backtest_run(req: BacktestRequest):
         freq=interval_to_freq(req.interval),
         strategy=req.strategy,
         strategy_params=req.strategy_params,
+        enable_tp_sl=req.enable_tp_sl,
     )
     result = run_backtest(config)
     logger.info("POST /backtest/run complete | %.3fs", time.perf_counter() - t0)
@@ -130,6 +133,7 @@ async def backtest_batch(req: BatchBacktestRequest):
             freq=interval_to_freq(req.interval),
             strategy=req.strategy,
             strategy_params=req.strategy_params,
+            enable_tp_sl=req.enable_tp_sl,
         )
         try:
             result = await loop.run_in_executor(_executor, run_backtest, config)

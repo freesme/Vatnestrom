@@ -78,3 +78,18 @@ class ATRChannelStrategy(BaseStrategy):
                 "overlay": True,
             },
         ]
+
+    def generate_tp_sl(
+        self, price: pd.Series, params: dict, ohlcv: pd.DataFrame | None = None
+    ) -> tuple[pd.Series, pd.Series]:
+        atr_window = params.get("atr_window", 14)
+        multiplier = params.get("multiplier", 2.0)
+
+        high = ohlcv["high"] if ohlcv is not None else price
+        low = ohlcv["low"] if ohlcv is not None else price
+
+        atr = vbt.ATR.run(high, low, price, window=atr_window).atr
+
+        tp_pct = (multiplier * atr / price).clip(0.001, 0.5)
+        sl_pct = (multiplier * atr / price).clip(0.001, 0.5)
+        return tp_pct, sl_pct

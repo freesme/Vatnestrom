@@ -19,10 +19,13 @@ const zh = {
   "form.interval": "K线周期",
   "form.run": "执行回测",
   "form.running": "回测中...",
+  "form.enable_tp_sl": "启用止盈止损（TP/SL 参与回测）",
 
   // 图表
   "chart.buy": "买",
   "chart.sell": "卖",
+  "chart.tp": "止盈",
+  "chart.sl": "止损",
 
   // 统计面板
   "stats.title": "回测统计",
@@ -69,6 +72,12 @@ const zh = {
   "trades.loss": "亏损",
   "trades.flat": "持平",
   "trades.open": "持仓中",
+  "trades.tp_price": "止盈价",
+  "trades.sl_price": "止损价",
+  "trades.exit_type": "卖出类型",
+  "trades.exit_tp": "止盈",
+  "trades.exit_sl": "止损",
+  "trades.exit_signal": "信号",
 
   // 策略名称
   "strategy.ma_cross.name": "双均线交叉",
