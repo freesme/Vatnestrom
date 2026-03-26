@@ -1,20 +1,4 @@
 services:
-  db:
-    image: postgres:16-alpine
-    environment:
-      POSTGRES_USER: vbt
-      POSTGRES_PASSWORD: vbt_secret
-      POSTGRES_DB: vbt_playground
-    ports:
-      - "25432:5432"
-    volumes:
-      - pgdata:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U vbt -d vbt_playground"]
-      interval: 5s
-      timeout: 3s
-      retries: 5
-
   app:
     build: .
     ports:
@@ -27,6 +11,3 @@ services:
       db:
         condition: service_healthy
     restart: unless-stopped
-
-volumes:
-  pgdata:
