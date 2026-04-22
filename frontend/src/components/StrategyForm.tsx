@@ -19,8 +19,8 @@ export default function StrategyForm({ meta, onSubmit, loading }: Props) {
   const [symbol, setSymbol] = useState("AAPL");
   const [source, setSource] = useState("yahoo");
   const [interval, setInterval] = useState("1d");
-  const [startDate, setStartDate] = useState("2025-01-01");
-  const [endDate, setEndDate] = useState("2025-12-31");
+  const [startDate, setStartDate] = useState("2026-01-01");
+  const [endDate, setEndDate] = useState("2026-04-22");
   const [initCash, setInitCash] = useState(10000);
   const [fees, setFees] = useState(0.001);
   const [enableTpSl, setEnableTpSl] = useState(false);
