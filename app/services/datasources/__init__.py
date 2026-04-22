@@ -11,10 +11,12 @@ from app.services.datasources.sina import SinaDataSource
 from app.services.datasources.twelvedata import TwelveDataSource
 from app.services.datasources.alphavantage import AlphaVantageDataSource
 from app.services.datasources.tickflow import TickFlowDataSource
+from app.services.datasources.tushare import TushareDataSource
 
 SOURCE_REGISTRY: dict[str, BaseDataSource] = {
     "yahoo": YahooDataSource(),
     "tickflow": TickFlowDataSource(),
+    "tushare": TushareDataSource(),
     "sina": SinaDataSource(),
     "twelvedata": TwelveDataSource(),
     "alphavantage": AlphaVantageDataSource(),

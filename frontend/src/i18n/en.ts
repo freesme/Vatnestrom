@@ -137,6 +137,8 @@ const en: Record<string, string> = {
   "source.tickflow": "TickFlow",
   "source.yahoo": "Yahoo Finance",
   "source.yahoo_hint": "US stocks & some A-shares, delayed 15min+, no API Key needed",
+  "source.tushare": "Tushare Pro",
+  "source.tushare_hint": "A-shares only, requires API Token, supports daily & minute bars",
   "source.sina": "Sina Finance",
   "source.sina_hint": "A-shares only, supports real-time intraday data",
   "source.twelvedata": "Twelve Data",

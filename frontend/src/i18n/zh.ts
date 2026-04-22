@@ -137,6 +137,8 @@ const zh = {
   "source.tickflow": "TickFlow",
   "source.yahoo": "Yahoo Finance",
   "source.yahoo_hint": "美股及部分 A 股，延迟 15 分钟以上，无需 API Key",
+  "source.tushare": "Tushare Pro",
+  "source.tushare_hint": "仅 A 股，需要 API Token，支持日线及分钟线数据",
   "source.sina": "新浪财经",
   "source.sina_hint": "仅支持 A 股（沪深），支持当日实时数据",
   "source.twelvedata": "Twelve Data",

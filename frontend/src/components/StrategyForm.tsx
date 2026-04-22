@@ -73,6 +73,7 @@ export default function StrategyForm({ meta, onSubmit, loading }: Props) {
             <select className={inputClass} value={source} onChange={(e) => setSource(e.target.value)}>
               {[
                 { value: "tickflow",     labelKey: "source.tickflow" },
+                { value: "tushare",      labelKey: "source.tushare" },
                 { value: "yahoo",        labelKey: "source.yahoo" },
                 { value: "sina",         labelKey: "source.sina" },
                 { value: "twelvedata",   labelKey: "source.twelvedata" },

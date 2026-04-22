@@ -22,7 +22,12 @@
       "Bash(npx tsc:*)",
       "Bash(npm run:*)",
       "Bash(npm ls:*)",
-      "Bash(node -e \"const lc = require\\(''lightweight-charts''\\); const keys = Object.keys\\(lc\\).filter\\(k => k.toLowerCase\\(\\).includes\\(''marker''\\)\\); console.log\\(keys\\)\")"
+      "Bash(node -e \"const lc = require\\(''lightweight-charts''\\); const keys = Object.keys\\(lc\\).filter\\(k => k.toLowerCase\\(\\).includes\\(''marker''\\)\\); console.log\\(keys\\)\")",
+      "Bash(find /c/Users/WIN10/PycharmProjects/Vatnestrom/app -name *.py -type f)",
+      "Bash(xargs ls:*)",
+      "Bash(grep -r \"take_profit\\\\|stop_loss\\\\|tp_price\\\\|sl_price\" /c/Users/WIN10/PycharmProjects/Vatnestrom --include=*.py --include=*.ts --include=*.tsx)",
+      "Bash(find \"C:\\\\Users\\\\WIN10\\\\PycharmProjects\\\\Vatnestrom\\\\frontend\\\\src\"\" -type f -name \"*.ts\" -o -name \"*.tsx \")",
+      "Bash(grep -r \"stop\\\\|profit\" /c/Users/WIN10/PycharmProjects/Vatnestrom/app --include=*.py -i)"
     ]
   }
 }
